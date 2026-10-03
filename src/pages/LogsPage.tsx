@@ -705,7 +705,12 @@ export function LogsPage() {
     lockScroll();
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
+      if (
+        event.key !== 'Escape' ||
+        event.defaultPrevented ||
+        document.querySelector('[role="dialog"]')
+      )
+        return;
       if (document.querySelector('.modal-overlay')) return;
       setFullscreenLogs(false);
     };

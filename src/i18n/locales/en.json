@@ -843,6 +843,9 @@
     "expires_at": "Expires {{time}}"
   },
   "kimi_quota": {
+    "monthly_limit": "Monthly limit",
+    "stale_request": "The connection or credential changed. Please retry.",
+    "domain_unavailable": "Could not read the Kimi credential's domain. A downloadable, valid authentication file is required.",
     "title": "Kimi Quota",
     "empty_title": "No Kimi Auth Files",
     "empty_desc": "Upload a Kimi credential to view remaining quota.",

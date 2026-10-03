@@ -370,17 +370,23 @@ export const buildManualRefreshExpiredAt = (nowMs = Date.now()): string =>
 export const authFilesApi = {
   list: async () => dedupeAuthFilesResponse(await apiClient.get<AuthFilesResponse>('/auth-files')),
 
-  setStatus: (name: string, disabled: boolean) =>
-    apiClient.patch<AuthFileStatusResponse>('/auth-files/status', { name, disabled }),
+  setStatus: (name: string, disabled: boolean, authIndex?: string) =>
+    apiClient.patch<AuthFileStatusResponse>('/auth-files/status', {
+      name,
+      disabled,
+      ...(authIndex?.trim() ? { auth_index: authIndex.trim() } : {}),
+    }),
 
   patchFields: (name: string, fields: AuthFileFieldsPatch) =>
     apiClient.patch('/auth-files/fields', { name, ...fields }),
 
-  requestManualRefresh: (name: string) =>
-    apiClient.patch('/auth-files/fields', {
+  requestManualRefresh: async (name: string, authIndex?: string): Promise<void> => {
+    // The backend refresh response may contain credentials; never retain or return it.
+    await apiClient.post('/auth-files/refresh', {
       name,
-      expired: buildManualRefreshExpiredAt(),
-    }),
+      ...(authIndex?.trim() ? { auth_index: authIndex.trim() } : {}),
+    });
+  },
 
   /** Clear CPA-local quota/cooldown routing for one auth index. */
   resetQuota: (authIndex: string) =>

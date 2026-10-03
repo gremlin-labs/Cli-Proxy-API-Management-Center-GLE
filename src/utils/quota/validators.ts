@@ -29,7 +29,7 @@ export function isDevinFile(file: AuthFileItem): boolean {
 }
 
 export function isKimiFile(file: AuthFileItem): boolean {
-  return resolveAuthProvider(file) === 'kimi';
+  return ['kimi', 'kimi-ai'].includes(resolveAuthProvider(file));
 }
 
 export function isMetaFile(file: AuthFileItem): boolean {

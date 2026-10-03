@@ -1,5 +1,10 @@
+import {
+  readVisualConfigRecord,
+  visualConfigDocument,
+} from '@/components/config/visualConfigLayout';
+import { readConfigBoolean } from '@/components/config/visualConfigBoolean';
 import { useCallback, useMemo, useReducer } from 'react';
-import { isMap, isScalar, isSeq, parse as parseYaml, parseDocument } from 'yaml';
+import { isMap, isScalar, isSeq, parseDocument } from 'yaml';
 import type {
   DisableImageGenerationMode,
   PluginStoreAuthApplyTo,
@@ -53,7 +58,10 @@ export function parseApiKeyEntries(text: string): VisualApiKeyEntry[] {
     }
     const key = line.slice(0, tab).trim();
     if (!key) continue;
-    const name = line.slice(tab + 1).replace(/[\r\n\t]+/g, ' ').trim();
+    const name = line
+      .slice(tab + 1)
+      .replace(/[\r\n\t]+/g, ' ')
+      .trim();
     entries.push({ key, name });
   }
   return entries;
@@ -649,7 +657,7 @@ function parsePluginStoreAuthRules(raw: unknown): PluginStoreAuthRule[] {
         headerName: typeof record['header-name'] === 'string' ? record['header-name'] : '',
         headerValueEnv:
           typeof record['header-value-env'] === 'string' ? record['header-value-env'] : '',
-        allowInsecure: Boolean(record['allow-insecure'] ?? record.allow_insecure),
+        allowInsecure: readConfigBoolean(record['allow-insecure'] ?? record.allow_insecure, false),
       };
       return rule.match.trim() ||
         rule.type !== 'none' ||
@@ -1164,12 +1172,12 @@ export function useVisualConfig() {
     try {
       // Do not name this `document` — Vite/oxc can rewrite that identifier as the DOM global
       // and drop it from call sites (leaving resolveApiKeysText with the plain parsed object).
-      const yamlDoc = parseDocument(yamlContent);
+      const yamlDoc = visualConfigDocument(parseDocument(yamlContent));
       if (yamlDoc.errors.length > 0) {
         throw new Error(yamlDoc.errors[0]?.message ?? 'Invalid YAML');
       }
 
-      const parsedRaw: unknown = parseYaml(yamlContent) || {};
+      const parsedRaw: unknown = readVisualConfigRecord(yamlDoc);
       const parsed = asRecord(parsedRaw) ?? {};
       const tls = asRecord(parsed.tls);
       const remoteManagement = asRecord(parsed['remote-management']);
@@ -1185,17 +1193,23 @@ export function useVisualConfig() {
         host: typeof parsed.host === 'string' ? parsed.host : '',
         port: String(parsed.port ?? ''),
 
-        tlsEnable: Boolean(tls?.enable),
+        tlsEnable: readConfigBoolean(tls?.enable, false),
         tlsCert: typeof tls?.cert === 'string' ? tls.cert : '',
         tlsKey: typeof tls?.key === 'string' ? tls.key : '',
 
-        rmAllowRemote: Boolean(remoteManagement?.['allow-remote']),
+        rmAllowRemote: readConfigBoolean(remoteManagement?.['allow-remote'], false),
         rmSecretKey:
           typeof remoteManagement?.['secret-key'] === 'string'
             ? remoteManagement['secret-key']
             : '',
-        rmDisableControlPanel: Boolean(remoteManagement?.['disable-control-panel']),
-        rmDisableAutoUpdatePanel: Boolean(remoteManagement?.['disable-auto-update-panel']),
+        rmDisableControlPanel: readConfigBoolean(
+          remoteManagement?.['disable-control-panel'],
+          false
+        ),
+        rmDisableAutoUpdatePanel: readConfigBoolean(
+          remoteManagement?.['disable-auto-update-panel'],
+          false
+        ),
         rmPanelRepo:
           typeof remoteManagement?.['panel-github-repository'] === 'string'
             ? remoteManagement['panel-github-repository']
@@ -1205,27 +1219,27 @@ export function useVisualConfig() {
 
         authDir: typeof parsed['auth-dir'] === 'string' ? parsed['auth-dir'] : '',
         apiKeysText: resolveApiKeysText(yamlDoc, parsed),
-        pluginsEnabled: Boolean(plugins?.enabled),
+        pluginsEnabled: readConfigBoolean(plugins?.enabled, false),
         pluginStoreSources: parseStringList(plugins?.['store-sources']),
         pluginStoreAuth: parsePluginStoreAuthRules(plugins?.['store-auth']),
 
-        debug: Boolean(parsed.debug),
-        commercialMode: Boolean(parsed['commercial-mode']),
-        loggingToFile: Boolean(parsed['logging-to-file']),
+        debug: readConfigBoolean(parsed.debug, false),
+        commercialMode: readConfigBoolean(parsed['commercial-mode'], false),
+        loggingToFile: readConfigBoolean(parsed['logging-to-file'], false),
         logsMaxTotalSizeMb: String(parsed['logs-max-total-size-mb'] ?? ''),
         errorLogsMaxFiles: String(parsed['error-logs-max-files'] ?? ''),
-        usageStatisticsEnabled: Boolean(parsed['usage-statistics-enabled']),
+        usageStatisticsEnabled: readConfigBoolean(parsed['usage-statistics-enabled'], false),
         redisUsageQueueRetentionSeconds: String(
           parsed['redis-usage-queue-retention-seconds'] ?? ''
         ),
 
         proxyUrl: typeof parsed['proxy-url'] === 'string' ? parsed['proxy-url'] : '',
-        forceModelPrefix: Boolean(parsed['force-model-prefix']),
-        passthroughHeaders: Boolean(parsed['passthrough-headers']),
+        forceModelPrefix: readConfigBoolean(parsed['force-model-prefix'], false),
+        passthroughHeaders: readConfigBoolean(parsed['passthrough-headers'], false),
         requestRetry: String(parsed['request-retry'] ?? ''),
         maxRetryCredentials: String(parsed['max-retry-credentials'] ?? ''),
         maxRetryInterval: String(parsed['max-retry-interval'] ?? ''),
-        disableCooling: Boolean(parsed['disable-cooling']),
+        disableCooling: readConfigBoolean(parsed['disable-cooling'], false),
         disableImageGeneration: parseDisableImageGenerationMode(parsed['disable-image-generation']),
         excelModelsEnabled: hasExcelKey(parsed['excel-api-key']),
         gptImage2BaseModel:
@@ -1233,11 +1247,15 @@ export function useVisualConfig() {
             ? parsed['gpt-image-2-base-model']
             : '',
         authAutoRefreshWorkers: String(parsed['auth-auto-refresh-workers'] ?? ''),
-        wsAuth: Boolean(parsed['ws-auth']),
-        antigravitySignatureCacheEnabled: Boolean(
-          parsed['antigravity-signature-cache-enabled'] ?? true
+        wsAuth: readConfigBoolean(parsed['ws-auth'], false),
+        antigravitySignatureCacheEnabled: readConfigBoolean(
+          parsed['antigravity-signature-cache-enabled'],
+          true
         ),
-        antigravitySignatureBypassStrict: Boolean(parsed['antigravity-signature-bypass-strict']),
+        antigravitySignatureBypassStrict: readConfigBoolean(
+          parsed['antigravity-signature-bypass-strict'],
+          false
+        ),
 
         claudeHeaderUserAgent:
           typeof claudeHeaderDefaults?.['user-agent'] === 'string'
@@ -1256,8 +1274,9 @@ export function useVisualConfig() {
           typeof claudeHeaderDefaults?.arch === 'string' ? claudeHeaderDefaults.arch : '',
         claudeHeaderTimeout:
           typeof claudeHeaderDefaults?.timeout === 'string' ? claudeHeaderDefaults.timeout : '',
-        claudeHeaderStabilizeDeviceProfile: Boolean(
-          claudeHeaderDefaults?.['stabilize-device-profile']
+        claudeHeaderStabilizeDeviceProfile: readConfigBoolean(
+          claudeHeaderDefaults?.['stabilize-device-profile'],
+          false
         ),
         codexHeaderUserAgent:
           typeof codexHeaderDefaults?.['user-agent'] === 'string'
@@ -1268,13 +1287,14 @@ export function useVisualConfig() {
             ? codexHeaderDefaults['beta-features']
             : '',
 
-        quotaSwitchProject: Boolean(quotaExceeded?.['switch-project'] ?? true),
-        quotaSwitchPreviewModel: Boolean(quotaExceeded?.['switch-preview-model'] ?? true),
-        quotaAntigravityCredits: Boolean(quotaExceeded?.['antigravity-credits'] ?? false),
+        quotaSwitchProject: readConfigBoolean(quotaExceeded?.['switch-project'], true),
+        quotaSwitchPreviewModel: readConfigBoolean(quotaExceeded?.['switch-preview-model'], true),
+        quotaAntigravityCredits: readConfigBoolean(quotaExceeded?.['antigravity-credits'], false),
 
         routingStrategy: parseRoutingStrategy(routing?.strategy),
-        routingSessionAffinity: Boolean(
-          routing?.['session-affinity'] ?? routing?.sessionAffinity ?? routing?.['sessionAffinity']
+        routingSessionAffinity: readConfigBoolean(
+          routing?.['session-affinity'] ?? routing?.sessionAffinity ?? routing?.['sessionAffinity'],
+          false
         ),
         routingSessionAffinityTTL:
           typeof routing?.['session-affinity-ttl'] === 'string'
@@ -1310,7 +1330,7 @@ export function useVisualConfig() {
   const applyVisualChangesToYaml = useCallback(
     (currentYaml: string): string => {
       try {
-        const doc = parseDocument(currentYaml);
+        const doc = visualConfigDocument(parseDocument(currentYaml));
         if (doc.errors.length > 0) return currentYaml;
         if (!isMap(doc.contents)) {
           doc.contents = doc.createNode({}) as unknown as typeof doc.contents;
@@ -1457,7 +1477,7 @@ export function useVisualConfig() {
           // The switch only manages the presence of the section: an empty entry
           // enables the models using the Codex credentials already loaded.
           if (values.excelModelsEnabled) {
-            const existing = doc.getIn(['excel-api-key']);
+            const existing = doc.getIn(['excel-api-key'], true);
             if (!isSeq(existing) || existing.items.length === 0) {
               doc.setIn(['excel-api-key'], doc.createNode([{}]));
             }

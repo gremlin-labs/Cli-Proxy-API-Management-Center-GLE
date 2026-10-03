@@ -256,6 +256,15 @@ export function buildKimiQuotaRows(payload: KimiUsagePayload): KimiQuotaRow[] {
     }
   }
 
+  const monthly = payload.usages?.limit_month_total;
+  const ratio = normalizeNumberValue(monthly?.used_ratio);
+  if (monthly && ratio !== null) {
+    const row = toKimiUsageRow(
+      { used: Math.round(ratio * 100), limit: 100, reset_time: monthly.reset_time },
+      { labelKey: 'kimi_quota.monthly_limit' }
+    );
+    if (row) rows.push({ id: 'monthly', ...row });
+  }
   return rows;
 }
 

@@ -70,7 +70,9 @@ export type UseAuthFilesDataOptions = {
   onCooldownReset?: (names: string[]) => void;
 };
 
-export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = {}): UseAuthFilesDataResult {
+export function useAuthFilesData({
+  onCooldownReset,
+}: UseAuthFilesDataOptions = {}): UseAuthFilesDataResult {
   const { t } = useTranslation();
   const { showNotification, showConfirmation } = useNotificationStore();
   const clearQuotaForFile = useQuotaStore((state) => state.clearQuotaForFile);
@@ -89,6 +91,7 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
   const [batchFieldsSaving, setBatchFieldsSaving] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
+  const listRequestSeq = useRef(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const uploadPendingRef = useRef(false);
   const manualRefreshPendingRef = useRef<Set<string>>(new Set());
@@ -182,25 +185,34 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
     });
   }, [files, selectedFiles.size]);
 
-  const loadFiles = useCallback(async (options?: { silent?: boolean }) => {
-    const silent = options?.silent === true;
-    // Keep existing cards mounted during background refresh (quota patch, interval, etc.).
-    if (!silent) {
-      setLoading(true);
-    }
-    setError('');
-    try {
-      const data = await authFilesApi.list();
-      setFiles(data?.files || []);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : t('notification.refresh_failed');
-      setError(errorMessage);
-    } finally {
+  const loadFiles = useCallback(
+    async (options?: { silent?: boolean }) => {
+      const revision = apiClient.getConnectionRevision();
+      const request = ++listRequestSeq.current;
+      const isCurrent = () =>
+        revision === apiClient.getConnectionRevision() && request === listRequestSeq.current;
+      const silent = options?.silent === true;
+      // Keep existing cards mounted during background refresh (quota patch, interval, etc.).
       if (!silent) {
-        setLoading(false);
+        setLoading(true);
       }
-    }
-  }, [t]);
+      setError('');
+      try {
+        const data = await authFilesApi.list();
+        if (!isCurrent()) return;
+        setFiles(data?.files || []);
+      } catch (err: unknown) {
+        if (!isCurrent()) return;
+        const errorMessage = err instanceof Error ? err.message : t('notification.refresh_failed');
+        setError(errorMessage);
+      } finally {
+        if (isCurrent()) {
+          setLoading(false);
+        }
+      }
+    },
+    [t]
+  );
 
   const handleUploadClick = useCallback(() => {
     if (uploadPendingRef.current) return;
@@ -473,39 +485,49 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
 
   const handleManualRefresh = useCallback(
     async (item: AuthFileItem) => {
+      const revision = apiClient.getConnectionRevision();
+      const isCurrent = () => revision === apiClient.getConnectionRevision();
       const name = item.name.trim();
+      const pendingKey = JSON.stringify([revision, name, getAuthFileAuthIndex(item)]);
       const provider = item.type ?? item.provider;
       if (
         !name ||
         item.disabled === true ||
         isRuntimeOnlyAuthFile(item) ||
         !supportsAuthFileManualRefresh(provider) ||
-        manualRefreshPendingRef.current.has(name)
+        manualRefreshPendingRef.current.has(pendingKey)
       ) {
         return;
       }
 
-      manualRefreshPendingRef.current.add(name);
+      manualRefreshPendingRef.current.add(pendingKey);
       setManualRefreshing((prev) => ({ ...prev, [name]: true }));
 
       try {
-        await authFilesApi.requestManualRefresh(name);
+        ++listRequestSeq.current;
+        await authFilesApi.requestManualRefresh(name, getAuthFileAuthIndex(item) ?? undefined);
+        if (!isCurrent()) return;
+        await loadFiles({ silent: true });
+        if (!isCurrent()) return;
         showNotification(t('auth_files.manual_refresh_requested', { name }), 'info');
         notifyAuthFilesChanged();
       } catch (err: unknown) {
+        if (!isCurrent()) return;
         const message = err instanceof Error ? err.message : t('notification.update_failed');
         showNotification(t('auth_files.manual_refresh_failed', { name, message }), 'error');
       } finally {
-        manualRefreshPendingRef.current.delete(name);
-        setManualRefreshing((prev) => {
-          if (!prev[name]) return prev;
-          const next = { ...prev };
-          delete next[name];
-          return next;
-        });
+        manualRefreshPendingRef.current.delete(pendingKey);
+        if (isCurrent()) {
+          setManualRefreshing((prev) => {
+            if (!prev[name]) return prev;
+            const next = { ...prev };
+            delete next[name];
+            return next;
+          });
+        }
       }
     },
-    [showNotification, t]
+    [loadFiles, showNotification, t]
   );
 
   const runResetCooldown = useCallback(async (item: AuthFileItem): Promise<boolean> => {
@@ -578,7 +600,15 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
         },
       });
     },
-    [clearQuotaForFile, loadFiles, onCooldownReset, runResetCooldown, showConfirmation, showNotification, t]
+    [
+      clearQuotaForFile,
+      loadFiles,
+      onCooldownReset,
+      runResetCooldown,
+      showConfirmation,
+      showNotification,
+      t,
+    ]
   );
 
   const batchResetCooldown = useCallback(
@@ -621,8 +651,7 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
                 if (ok) {
                   succeeded += 1;
                   succeededNames.push(file.name);
-                }
-                else failed += 1;
+                } else failed += 1;
               } catch {
                 failed += 1;
               }
@@ -658,7 +687,15 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
         },
       });
     },
-    [clearQuotaForFile, loadFiles, onCooldownReset, runResetCooldown, showConfirmation, showNotification, t]
+    [
+      clearQuotaForFile,
+      loadFiles,
+      onCooldownReset,
+      runResetCooldown,
+      showConfirmation,
+      showNotification,
+      t,
+    ]
   );
 
   const handleStatusToggle = useCallback(
@@ -671,7 +708,11 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
       setFiles((prev) => prev.map((f) => (f.name === name ? { ...f, disabled: nextDisabled } : f)));
 
       try {
-        const res = await authFilesApi.setStatus(name, nextDisabled);
+        const res = await authFilesApi.setStatus(
+          name,
+          nextDisabled,
+          getAuthFileAuthIndex(item) ?? undefined
+        );
         setFiles((prev) =>
           prev.map((f) => (f.name === name ? { ...f, disabled: res.disabled } : f))
         );
@@ -798,9 +839,7 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
     async (names: string[], priority: number) => {
       if (batchFieldsPendingRef.current) return;
 
-      const requestedNames = Array.from(
-        new Set(names.map((name) => name.trim()).filter(Boolean))
-      );
+      const requestedNames = Array.from(new Set(names.map((name) => name.trim()).filter(Boolean)));
       if (requestedNames.length === 0) return;
       // Runtime-only entries have no backing file fields to patch.
       const targetNames = files
@@ -943,9 +982,7 @@ export function useAuthFilesData({ onCooldownReset }: UseAuthFilesDataOptions = 
         if (successCount > 0) {
           setFiles((prev) =>
             prev.map((file) =>
-              succeededNames.has(file.name)
-                ? { ...file, allow_private_instructions: allow }
-                : file
+              succeededNames.has(file.name) ? { ...file, allow_private_instructions: allow } : file
             )
           );
           notifyAuthFilesChanged();

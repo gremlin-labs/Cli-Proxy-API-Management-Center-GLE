@@ -1,3 +1,4 @@
+import { resolveKimiQuotaUrl } from '@/services/api/kimiQuota';
 /**
  * Quota configuration definitions.
  */
@@ -54,7 +55,6 @@ import {
   CODEX_SUBSCRIPTION_URL,
   CODEX_USAGE_URL,
   CODEX_REQUEST_HEADERS,
-  KIMI_USAGE_URL,
   KIMI_REQUEST_HEADERS,
   QODERCN_USAGE_URL,
   QODERCN_REQUEST_HEADERS,
@@ -1625,13 +1625,27 @@ const fetchKimiQuota = async (file: AuthFileItem, t: TFunction): Promise<KimiQuo
     throw new Error(t('kimi_quota.missing_auth_index'));
   }
 
+  const generation = captureQuotaCacheGeneration(file.name);
+  const assertCurrent = () => {
+    if (!commitIfQuotaCacheCurrent(generation, () => {}))
+      throw new Error(t('kimi_quota.stale_request'));
+  };
+  let url: string;
+  try {
+    url = await resolveKimiQuotaUrl(file);
+  } catch {
+    assertCurrent();
+    throw new Error(t('kimi_quota.domain_unavailable'));
+  }
+  assertCurrent();
   const result = await apiCallApi.request({
     authIndex,
     method: 'GET',
-    url: KIMI_USAGE_URL,
+    url,
     header: { ...KIMI_REQUEST_HEADERS },
   });
 
+  assertCurrent();
   if (result.statusCode < 200 || result.statusCode >= 300) {
     throw createStatusError(getApiCallErrorMessage(result), result.statusCode);
   }

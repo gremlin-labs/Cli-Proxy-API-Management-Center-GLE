@@ -316,6 +316,7 @@ export interface KimiLimitItem {
 }
 
 export interface KimiUsagePayload {
+  usages?: { limit_month_total?: { used_ratio?: number | string; reset_time?: string } };
   usage?: KimiUsageDetail;
   limits?: KimiLimitItem[];
 }

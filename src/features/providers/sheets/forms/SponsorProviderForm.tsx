@@ -1,3 +1,4 @@
+import { mergeDiscoveredModels } from '../../modelEntries';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Collapsible } from '@/components/ui/Collapsible';
@@ -140,8 +141,7 @@ const isHealthyUsageSummary = (summary: ApiKeyFunUsageSummary): boolean => {
 
 const modelsFromConfig = (
   models:
-    | Array<{ name?: string; alias?: string; priority?: number; testModel?: string }>
-    | undefined
+    Array<{ name?: string; alias?: string; priority?: number; testModel?: string }> | undefined
 ): ModelEntryInput[] =>
   models?.length
     ? models.map((model) => ({
@@ -214,33 +214,7 @@ const applyDiscoveredModels = (
   currentModels: ModelEntryInput[],
   incoming: ModelInfo[]
 ): ModelEntryInput[] => {
-  if (!incoming.length) return currentModels;
-  const seen = new Set<string>();
-  const next: ModelEntryInput[] = [];
-  currentModels.forEach((entry) => {
-    const trimmed = (entry.name ?? '').trim();
-    if (trimmed) {
-      if (seen.has(trimmed)) return;
-      seen.add(trimmed);
-    }
-    next.push(entry);
-  });
-  const placeholderIdx = next.findIndex(
-    (entry) => !(entry.name ?? '').trim() && !(entry.alias ?? '').trim()
-  );
-  if (placeholderIdx !== -1) {
-    next.splice(placeholderIdx, 1);
-  }
-  incoming.forEach((info) => {
-    const trimmed = info.name.trim();
-    if (!trimmed || seen.has(trimmed)) return;
-    seen.add(trimmed);
-    next.push({
-      name: trimmed,
-      alias: (info.alias ?? '').trim(),
-    });
-  });
-  return next.length ? next : [emptyModel()];
+  return mergeDiscoveredModels(currentModels, incoming);
 };
 
 function SponsorModelSection({
@@ -412,6 +386,7 @@ function SponsorKeyEntryCard({
   const discovery = useModelDiscovery({
     brand: discoveryBrandForSponsorProtocol(entry.protocol),
     baseUrl: endpointUrl,
+    proxyUrl: entry.proxyUrl,
     formHeaders: discoveryHeaders,
     apiKey: entry.apiKey,
     fallbackApiKey: entry.existingApiKey,
