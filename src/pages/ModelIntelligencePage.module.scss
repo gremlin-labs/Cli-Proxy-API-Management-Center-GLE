@@ -1,0 +1,719 @@
+@use '../styles/mixins' as *;
+@use '../styles/variables' as *;
+
+// Categorical creator palette (validated for CVD separation on the light and
+// dark card surfaces). Slot order is fixed; the grey "other" is outside it.
+.container {
+  --mi-c0: #2a78d6;
+  --mi-c1: #eb6834;
+  --mi-c2: #1baf7a;
+  --mi-c3: #eda100;
+  --mi-c4: #e87ba4;
+  --mi-c5: #008300;
+  --mi-c6: #4a3aa7;
+  --mi-c7: #e34948;
+  --mi-other: #b3ada4;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+:global([data-theme='dark']) .container {
+  --mi-c0: #3987e5;
+  --mi-c1: #d95926;
+  --mi-c2: #199e70;
+  --mi-c3: #c98500;
+  --mi-c4: #d55181;
+  --mi-c5: #008300;
+  --mi-c6: #9085e9;
+  --mi-c7: #e66767;
+  --mi-other: #5f5a53;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+
+  h1 {
+    margin: 0;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+}
+
+.headerText {
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.titleIcon {
+  display: inline-flex;
+  color: var(--text-tertiary);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.attribution {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-weight: 550;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+}
+
+.metaSep {
+  color: var(--text-quaternary);
+}
+
+.metaPill {
+  padding: 1px 7px;
+  border-radius: $radius-full;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: $radius-lg;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+
+.errorBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: 10px 14px;
+  border-radius: $radius-md;
+  border: 1px solid var(--failure-badge-border);
+  background: var(--failure-badge-bg);
+  color: var(--failure-badge-text);
+  font-size: 13px;
+
+  p {
+    margin: 2px 0 0;
+    color: var(--text-secondary);
+    word-break: break-word;
+  }
+}
+
+.warningBox {
+  padding: 8px 12px;
+  border-radius: $radius-md;
+  border: 1px solid var(--amber-30);
+  background: var(--amber-10);
+  color: var(--amber-text);
+  font-size: 12.5px;
+}
+
+.skeletonStack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Setup / API key ----------------------------------------------------------
+
+.setupCard {
+  max-width: 760px;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+.setupLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.keyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyRow {
+  display: flex;
+  align-items: flex-end;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+
+  :global(.form-group) {
+    margin: 0;
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+}
+
+.tierField,
+.axisField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 550;
+}
+
+.tierField {
+  min-width: 110px;
+}
+
+.keyActions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.keyNote,
+.keySource,
+.subtleNote {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+
+  code {
+    font-family: $font-mono;
+    font-size: 11.5px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+  }
+}
+
+.keySource {
+  color: var(--text-secondary);
+}
+
+// Filters ------------------------------------------------------------------
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.filterSearch {
+  flex: 1 1 240px;
+  max-width: 360px;
+
+  :global(.form-group) {
+    margin: 0;
+  }
+}
+
+.creatorChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: $radius-full;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    border-color: var(--border-hover);
+  }
+}
+
+.chipOff {
+  color: var(--text-tertiary);
+  background: transparent;
+  text-decoration: line-through;
+
+  i {
+    opacity: 0.3;
+  }
+}
+
+.chipCount {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.chipLink {
+  padding: 3px 6px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+}
+
+// Chart --------------------------------------------------------------------
+
+.chartControls {
+  display: flex;
+  align-items: flex-end;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.axisField {
+  min-width: 200px;
+}
+
+.plotted {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.chartWrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.chartSvg {
+  display: block;
+  overflow: visible;
+}
+
+.chartHint {
+  position: absolute;
+  top: 2px;
+  right: 18px;
+  font-size: 11.5px;
+  font-weight: 550;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.chartEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  border: 1px dashed var(--border-color);
+  border-radius: $radius-md;
+}
+
+.grid {
+  stroke: var(--border-color);
+  stroke-width: 1;
+}
+
+.axis {
+  stroke: var(--border-hover);
+  stroke-width: 1;
+}
+
+.tick {
+  fill: var(--text-tertiary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.axisLabel {
+  fill: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 550;
+}
+
+.point {
+  cursor: pointer;
+  outline: none;
+
+  &:focus-visible .dot {
+    stroke: var(--text-primary);
+    stroke-width: 2;
+  }
+}
+
+.hit {
+  fill: transparent;
+}
+
+.dot {
+  stroke: var(--bg-primary);
+  stroke-width: 1.5;
+  transition: r 0.12s ease;
+}
+
+.dotActive {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+}
+
+.proxyRing {
+  fill: none;
+  stroke-width: 1.25;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 2;
+  min-width: 180px;
+  max-width: 260px;
+  padding: 8px 10px;
+  border-radius: $radius-md;
+  border: 1px solid var(--border-color);
+  background: var(--floating-surface);
+  box-shadow: var(--floating-shadow);
+  font-size: 12px;
+  color: var(--text-primary);
+  pointer-events: none;
+
+  strong {
+    display: block;
+    font-size: 12.5px;
+    margin-bottom: 2px;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 12px;
+    margin: 6px 0 0;
+  }
+
+  dt {
+    color: var(--text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+}
+
+.tooltipCreator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding-top: 4px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+
+  i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  &:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+  }
+}
+
+.legendOff {
+  color: var(--text-quaternary);
+  text-decoration: line-through;
+
+  i {
+    opacity: 0.3;
+  }
+}
+
+.legendNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.legendRing {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.25px solid var(--text-tertiary);
+}
+
+// Table --------------------------------------------------------------------
+
+.tableCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.tableScroll {
+  overflow-x: auto;
+  max-height: 640px;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+
+  th,
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--bg-primary);
+    padding: 0;
+  }
+
+  tbody tr:hover,
+  tbody tr.rowActive {
+    background: var(--bg-tertiary);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.rowActive {
+  background: var(--bg-tertiary);
+}
+
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+
+  .num & {
+    justify-content: flex-end;
+  }
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.sortActive {
+  color: var(--text-primary);
+}
+
+.sortArrow {
+  font-size: 8px;
+  min-width: 8px;
+}
+
+.modelCell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modelName {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.proxyBadge {
+  display: inline-flex;
+  padding: 0 6px;
+  border-radius: $radius-full;
+  border: 1px solid var(--success-badge-border);
+  background: var(--success-badge-bg);
+  color: var(--success-badge-text);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 0 6px;
+  border-radius: $radius-full;
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  font-size: 10.5px;
+  line-height: 16px;
+}
+
+.creatorCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+}
+
+.emptyState {
+  padding: 28px 16px;
+  color: var(--text-tertiary);
+  text-align: center;
+  font-size: 13px;
+}
+
+.footer {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  padding-bottom: $spacing-md;
+
+  a {
+    color: var(--text-secondary);
+
+    &:hover {
+      color: var(--text-primary);
+      text-decoration: underline;
+    }
+  }
+}
+
+@include mobile {
+  .plotted {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .axisField {
+    min-width: 0;
+    flex: 1 1 140px;
+  }
+
+  .legendNote {
+    margin-left: 0;
+  }
+}

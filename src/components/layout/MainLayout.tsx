@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { PageTransition } from '@/components/common/PageTransition';
 import { CodexResetNotice } from '@/components/layout/CodexResetNotice';
-import { ModelIqNotice } from '@/components/layout/ModelIqNotice';
 import { MainRoutes } from '@/router/MainRoutes';
 import { pluginsApi } from '@/services/api';
 import {
@@ -21,6 +20,7 @@ import {
   IconSidebarDashboard,
   IconSidebarLogs,
   IconSidebarModelContext,
+  IconSidebarModelIntelligence,
   IconSidebarOauth,
   IconSidebarPlugins,
   IconSidebarProviders,
@@ -64,6 +64,7 @@ const sidebarIcons: Record<string, ReactNode> = {
   oauth: <IconSidebarOauth size={18} />,
   quota: <IconSidebarQuota size={18} />,
   monitoring: <IconSatellite size={18} />,
+  modelIntelligence: <IconSidebarModelIntelligence size={18} />,
   plugins: <IconSidebarPlugins size={18} />,
   pluginStore: <IconSidebarStore size={18} />,
   config: <IconSidebarConfig size={18} />,
@@ -486,6 +487,11 @@ export function MainLayout() {
           icon: sidebarIcons.monitoring,
         },
         {
+          path: '/model-intelligence',
+          labelKey: 'nav.model_intelligence',
+          icon: sidebarIcons.modelIntelligence,
+        },
+        {
           path: '/logs',
           labelKey: 'nav.logs',
           icon: sidebarIcons.logs,
@@ -699,7 +705,6 @@ export function MainLayout() {
           >
             {headerIcons.refresh}
           </Button>
-          <ModelIqNotice />
           <CodexResetNotice />
           <Button
             variant="ghost"

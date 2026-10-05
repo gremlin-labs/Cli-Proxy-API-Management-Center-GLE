@@ -15,6 +15,7 @@ import { PluginStorePage } from '@/features/plugins/PluginStorePage';
 import { ConfigPage } from '@/pages/ConfigPage';
 import { LogsPage } from '@/pages/LogsPage';
 import { MonitoringPage } from '@/pages/MonitoringPage';
+import { ModelIntelligencePage } from '@/pages/ModelIntelligencePage';
 import { PlaygroundPage } from '@/pages/PlaygroundPage';
 import { useAuthStore } from '@/stores';
 
@@ -35,6 +36,7 @@ const createMainRoutes = (supportsPlugin: boolean) => [
   { path: '/quota', element: <QuotaPage /> },
   { path: '/model-context', element: <ModelContextPage /> },
   { path: '/monitoring', element: <MonitoringPage /> },
+  { path: '/model-intelligence', element: <ModelIntelligencePage /> },
   ...(supportsPlugin
     ? [
         { path: '/plugin-pages/:pluginId/:menuIndex', element: <PluginResourcePage /> },

@@ -496,6 +496,22 @@ export function IconGauge({ size = 20, ...props }: IconProps) {
 
 export const IconSidebarQuota = IconGauge;
 
+/** Lucide chart-scatter. */
+export function IconChartScatter({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...baseSvgProps} width={size} height={size} {...props}>
+      <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+      <circle cx="18.5" cy="5.5" r=".5" fill="currentColor" />
+      <circle cx="11.5" cy="11.5" r=".5" fill="currentColor" />
+      <circle cx="7.5" cy="16.5" r=".5" fill="currentColor" />
+      <circle cx="17.5" cy="14.5" r=".5" fill="currentColor" />
+      <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+    </svg>
+  );
+}
+
+export const IconSidebarModelIntelligence = IconChartScatter;
+
 export const IconSidebarLogs = IconScrollText;
 
 export function IconSidebarSystem({ size = 20, ...props }: IconProps) {

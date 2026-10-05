@@ -15,6 +15,7 @@ export * from './models';
 export * from './metaQuota';
 export * from './playground';
 export * from './modelContext';
+export * from './modelIntelligence';
 export * from './plugins';
 export * from './transformers';
 export * from './vertex';
