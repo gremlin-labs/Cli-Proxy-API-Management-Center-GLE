@@ -3,10 +3,10 @@
 React 19 + TypeScript Vite frontend for the CLI Proxy API Management Center (this fork).
 
 ## Repository
-- **Origin (this fork, push/release):** https://github.com/josephcy95/Cli-Proxy-API-Management-Center (`origin`)
+- **Origin (this fork, push/release):** https://github.com/gremlin-labs/Cli-Proxy-API-Management-Center-GLE (`origin`)
 - **Upstream:** https://github.com/router-for-me/Cli-Proxy-API-Management-Center (`upstream`)
-- Tags / releases on **josephcy95** only. Use `gh -R josephcy95/Cli-Proxy-API-Management-Center` when default remote context is wrong.
-- Workspace sibling API: `../cliproxyapi-forked` (CLIProxyAPI Go backend). Parent workspace notes: `../AGENTS.md`.
+- Tags / releases on **gremlin-labs/Cli-Proxy-API-Management-Center-GLE** only, published with `scripts/release.sh vX.Y.Z-gremlinlabs.N` (GitHub Actions are disabled; never enable them).
+- Workspace sibling API: `../cliproxyapi` (CLIProxyAPI-GLE Go backend, https://github.com/gremlin-labs/CLIProxyAPI-GLE). Parent workspace notes: `../AGENTS.md`.
 
 ## Project structure
 Main source lives in `src/`: routes in `src/router`, pages in `src/pages`, components in `src/components`, API clients in `src/services/api`, state in `src/stores`, hooks in `src/hooks`, styles in `src/styles`, and types in `src/types`. Assets live in `src/assets`, with provider icons under `src/assets/icons`. Localization files are in `src/i18n/locales`; update all supported locales when adding user-facing text. Production output is `dist/index.html`.
@@ -48,7 +48,7 @@ Tie-breaker: **contract/protocol → upstream wins; product UI/QoL → fork wins
 - Prefer a real merge of upstream so GitHub is not left N commits behind, but start it with `git merge --no-commit --no-ff upstream/<ref>`. A clean automatic merge is an uncommitted review state, not approval to retain upstream UI or code.
 - `--no-commit` still stages all clean automatic changes; it only pauses before commit. Review those changes exactly like conflicts.
 - Do not create the merge commit until the UI fork-preservation gate below has completed. After merge: `bun run verify` before any release.
-- Backend contract changes (new management routes, provider keys, auth-file fields) usually land in `../cliproxyapi-forked` first — inspect that repo before renaming routes or provider ids here.
+- Backend contract changes (new management routes, provider keys, auth-file fields) usually land in `../cliproxyapi` first — inspect that repo before renaming routes or provider ids here.
 
 ### UI fork-preservation gate (mandatory before committing an upstream merge)
 1. Start from a clean worktree, record the pre-merge commit, fetch upstream, and perform a no-commit merge. Review the complete result against that commit, including all non-conflicting automatic changes, additions, deletions, renames, and moves.
@@ -95,11 +95,11 @@ When both sides touch the same feature, **keep fork behavior** if equal or bette
 - **Fork-owned design**: dashboard (`src/pages/DashboardPage*`), overall layout/theming, and any custom page chrome the fork already ships — do not replace with upstream redesigns
 - Monitoring page → `/v0/management/usage-*` endpoints (events, summary, filter-options, account-stats, api-key-stats)
 - Model prices / aliases / sync controls
-- Qoder CN and Qoder international OAuth entry points (`/qodercn-auth-url`, `/qoder-auth-url`) and provider cards
 - Codex custom instructions config UI (plain instructions only; the CPAMC++ private-instructions account segregation, `allow_private_instructions` flags and third-party instruction-template importer are intentionally excluded — do not re-adopt them)
-- xAI / Codex failure-policy config surfaces
+- Codex failure-policy config surfaces (Qoder and xAI pages are intentionally removed: out of scope)
 - Model context overrides management
 - Playground and other fork-only management surfaces
+- Quota Management ledger (`src/components/quota/QuotaLedger.tsx`; the card grid stays available as the "Cards" layout)
 - **No sponsor/promo content** — never reintroduce upstream ads, sponsor badges, donate chrome, splash, or marketing surfaces
 
 ## Ship policy
@@ -110,7 +110,7 @@ See parent `../AGENTS.md`. In short:
 - Conventional commits (e.g. `feat: …`, `fix(auth-files): …`, `ci: …`).
 
 ## Architecture notes
-This UI is not the proxy; it talks to the backend Management API under `/v0/management`. Treat backend contracts as the source of truth. For OAuth/provider changes, inspect `../cliproxyapi-forked` before changing route names, provider keys, callback parameters, or auth-file semantics. Store no secrets in the repo; management keys are entered at runtime and persisted only in browser storage.
+This UI is not the proxy; it talks to the backend Management API under `/v0/management`. Treat backend contracts as the source of truth. For OAuth/provider changes, inspect `../cliproxyapi` before changing route names, provider keys, callback parameters, or auth-file semantics. Store no secrets in the repo; management keys are entered at runtime and persisted only in browser storage.
 
 ## Pull requests
 Keep commits focused. PRs should include a change summary, linked issue when applicable, UI screenshots, backend version or reproduction details for integration work, and verification notes.

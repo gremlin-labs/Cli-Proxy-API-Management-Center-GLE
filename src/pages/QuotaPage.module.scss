@@ -816,3 +816,12 @@
     line-height: 1.6;
   }
 }
+
+.layoutBar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.layoutSelect {
+  width: 140px;
+}

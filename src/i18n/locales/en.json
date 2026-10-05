@@ -2521,5 +2521,29 @@
     "allowlist_hint": "Exact strings that are never masked (localhost, docs examples, test numbers). Not a substring match.",
     "allowlist_placeholder": "127.0.0.1",
     "add_allowlist": "Add"
+  },
+  "quota_ledger": {
+    "provider_claude": "Claude",
+    "provider_codex": "Codex",
+    "tab_all": "All",
+    "credential_count_one": "{{count}} credential",
+    "credential_count_other": "{{count}} credentials",
+    "loaded_count": "{{count}} loaded",
+    "show_emails": "Show emails",
+    "hide_emails": "Hide emails",
+    "refresh_all": "Refresh",
+    "refresh_quota": "Refresh quota",
+    "of_total": "of {{max}}%",
+    "no_reset": "No reset pending",
+    "show_more": "Show",
+    "show_less": "Hide",
+    "loading": "Loading quota…",
+    "not_loaded": "Quota not loaded yet",
+    "no_windows": "No quota windows reported",
+    "no_data": "No quota data yet",
+    "empty": "No Claude or Codex credentials yet. Add one under OAuth Login.",
+    "layout_label": "Layout",
+    "layout_ledger": "Ledger",
+    "layout_cards": "Cards"
   }
 }

@@ -3,6 +3,8 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { Select } from '@/components/ui/Select';
+import { QuotaLedger } from '@/components/quota/QuotaLedger';
 import { useTranslation } from 'react-i18next';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { useAuthStore } from '@/stores';
@@ -22,6 +24,17 @@ import {
 import type { AuthFileItem } from '@/types';
 import styles from './QuotaPage.module.scss';
 
+type QuotaLayout = 'ledger' | 'cards';
+const LAYOUT_KEY = 'cli-proxy-quota-layout';
+
+function readLayout(): QuotaLayout {
+  try {
+    return localStorage.getItem(LAYOUT_KEY) === 'cards' ? 'cards' : 'ledger';
+  } catch {
+    return 'ledger';
+  }
+}
+
 export function QuotaPage() {
   const { t } = useTranslation();
   const connectionStatus = useAuthStore((state) => state.connectionStatus);
@@ -31,6 +44,17 @@ export function QuotaPage() {
   const [error, setError] = useState('');
 
   const disableControls = connectionStatus !== 'connected';
+  const [layout, setLayoutState] = useState<QuotaLayout>(readLayout);
+
+  const setLayout = (value: string) => {
+    const next: QuotaLayout = value === 'cards' ? 'cards' : 'ledger';
+    setLayoutState(next);
+    try {
+      localStorage.setItem(LAYOUT_KEY, next);
+    } catch {
+      // Remembering the layout is a convenience only.
+    }
+  };
 
   const loadFiles = useCallback(async () => {
     setLoading(true);
@@ -52,8 +76,38 @@ export function QuotaPage() {
     loadFiles();
   }, [loadFiles]);
 
+  const layoutControl = (
+    <Select
+      value={layout}
+      onChange={setLayout}
+      size="sm"
+      fullWidth={false}
+      className={styles.layoutSelect}
+      ariaLabel={t('quota_ledger.layout_label')}
+      options={[
+        { value: 'ledger', label: t('quota_ledger.layout_ledger') },
+        { value: 'cards', label: t('quota_ledger.layout_cards') },
+      ]}
+    />
+  );
+
+  if (layout === 'ledger') {
+    return (
+      <div className={styles.container}>
+        {error && <div className={styles.errorBox}>{error}</div>}
+        <QuotaLedger
+          files={files}
+          filesLoading={loading}
+          disabled={disableControls}
+          layoutControl={layoutControl}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
+      <div className={styles.layoutBar}>{layoutControl}</div>
       {error && <div className={styles.errorBox}>{error}</div>}
 
       {files.some(CLAUDE_CONFIG.filterFn) && (

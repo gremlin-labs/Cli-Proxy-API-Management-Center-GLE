@@ -1070,22 +1070,7 @@ const renderCodexItems = (
   const rateLimitResetCredits = quota.rateLimitResetCredits ?? [];
   const rateLimitResetCreditsError = quota.rateLimitResetCreditsError ?? '';
 
-  const getPlanLabel = (pt?: string | null): string | null => {
-    const normalized = normalizePlanType(pt);
-    if (!normalized) return null;
-    if (normalized === 'pro') return t('codex_quota.plan_pro');
-    if (normalized === 'self_serve_business_prolite') {
-      return t('codex_quota.plan_business_premium');
-    }
-    if (PREMIUM_CODEX_PLAN_TYPES.has(normalized) && normalized !== 'pro') {
-      return t('codex_quota.plan_prolite');
-    }
-    if (normalized === 'plus') return t('codex_quota.plan_plus');
-    if (normalized === 'team') return t('codex_quota.plan_team');
-    if (normalized === 'free') return t('codex_quota.plan_free');
-    if (normalized === 'k12') return t('codex_quota.plan_k12');
-    return pt || normalized;
-  };
+  const getPlanLabel = (pt?: string | null): string | null => codexPlanLabel(t, pt);
 
   const planLabel = getPlanLabel(planType);
   const isPremiumPlan = PREMIUM_CODEX_PLAN_TYPES.has(normalizePlanType(planType) ?? '');
@@ -1518,6 +1503,24 @@ const renderClaudeItems = (
 
   return h(Fragment, null, ...nodes);
 };
+
+/** Display name for a Codex plan type, or null when unknown. */
+export function codexPlanLabel(t: TFunction, planType?: string | null): string | null {
+  const normalized = normalizePlanType(planType);
+  if (!normalized) return null;
+  if (normalized === 'pro') return t('codex_quota.plan_pro');
+  if (normalized === 'self_serve_business_prolite') {
+    return t('codex_quota.plan_business_premium');
+  }
+  if (PREMIUM_CODEX_PLAN_TYPES.has(normalized) && normalized !== 'pro') {
+    return t('codex_quota.plan_prolite');
+  }
+  if (normalized === 'plus') return t('codex_quota.plan_plus');
+  if (normalized === 'team') return t('codex_quota.plan_team');
+  if (normalized === 'free') return t('codex_quota.plan_free');
+  if (normalized === 'k12') return t('codex_quota.plan_k12');
+  return planType || normalized;
+}
 
 export const CLAUDE_CONFIG: QuotaConfig<
   ClaudeQuotaState,

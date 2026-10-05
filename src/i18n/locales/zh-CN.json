@@ -2521,5 +2521,29 @@
     "allowlist_hint": "这些字符串完全匹配时不会被脱敏（例如 localhost、文档示例、测试号码）。不是子串匹配。",
     "allowlist_placeholder": "127.0.0.1",
     "add_allowlist": "添加"
+  },
+  "quota_ledger": {
+    "provider_claude": "Claude",
+    "provider_codex": "Codex",
+    "tab_all": "全部",
+    "credential_count_one": "{{count}} 个凭证",
+    "credential_count_other": "{{count}} 个凭证",
+    "loaded_count": "已加载 {{count}}",
+    "show_emails": "显示邮箱",
+    "hide_emails": "隐藏邮箱",
+    "refresh_all": "刷新",
+    "refresh_quota": "刷新额度",
+    "of_total": "共 {{max}}%",
+    "no_reset": "无待重置",
+    "show_more": "展开",
+    "show_less": "收起",
+    "loading": "正在加载额度…",
+    "not_loaded": "尚未加载额度",
+    "no_windows": "未报告额度窗口",
+    "no_data": "暂无额度数据",
+    "empty": "还没有 Claude 或 Codex 凭证，请在 OAuth 登录中添加。",
+    "layout_label": "布局",
+    "layout_ledger": "账本",
+    "layout_cards": "卡片"
   }
 }
