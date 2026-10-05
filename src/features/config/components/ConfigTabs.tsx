@@ -17,6 +17,8 @@ export type ConfigTabsProps = {
   /** 有待保存修改的 tabs（uiState.resolveDirtyTabs 的产物），显示琥珀脏点。 */
   dirtyTabs: ReadonlySet<ConfigTabId>;
   disabled?: boolean;
+  /** Vertical renders a sticky section list beside the panel (desktop); horizontal is a scrolling strip. */
+  orientation?: 'horizontal' | 'vertical';
   onChange: (id: ConfigTabId) => void;
 };
 
@@ -29,6 +31,7 @@ export function ConfigTabs({
   errorCounts,
   dirtyTabs,
   disabled = false,
+  orientation = 'horizontal',
   onChange,
 }: ConfigTabsProps) {
   const { t } = useTranslation();
@@ -52,8 +55,10 @@ export function ConfigTabs({
     const count = CONFIG_TAB_IDS.length;
     const currentIndex = CONFIG_TAB_IDS.indexOf(active);
     let nextIndex = -1;
-    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % count;
-    else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + count) % count;
+    const nextKey = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
+    const previousKey = orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
+    if (event.key === nextKey) nextIndex = (currentIndex + 1) % count;
+    else if (event.key === previousKey) nextIndex = (currentIndex - 1 + count) % count;
     else if (event.key === 'Home') nextIndex = 0;
     else if (event.key === 'End') nextIndex = count - 1;
     if (nextIndex < 0) return;
@@ -65,9 +70,10 @@ export function ConfigTabs({
 
   return (
     <div
-      className={styles.tabs}
+      className={`${styles.tabs} ${orientation === 'vertical' ? styles.tabsVertical : ''}`}
       role="tablist"
       aria-label={t('config_management.title')}
+      aria-orientation={orientation}
       ref={listRef}
     >
       {CONFIG_TAB_IDS.map((id) => {

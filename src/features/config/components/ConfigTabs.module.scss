@@ -118,6 +118,36 @@
   flex-shrink: 0;
 }
 
+/* Vertical section list (desktop): filled active row, no underline or edge bar. */
+.tabsVertical {
+  flex-direction: column;
+  gap: 1px;
+  overflow: visible;
+
+  .tab {
+    width: 100%;
+    min-height: 32px;
+    padding: 6px 10px;
+    border-radius: $radius-md;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  .tabLabel {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: start;
+  }
+
+  .tabActive {
+    background: color-mix(in srgb, var(--text-primary) 9%, transparent);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tab,
   .tab::after {

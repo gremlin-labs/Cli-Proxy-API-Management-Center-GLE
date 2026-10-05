@@ -811,7 +811,8 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
-  overflow-x: hidden;
+  /* clip (not hidden) keeps .content as the only scroll container, so sticky page elements work */
+  overflow-x: clip;
 
   &.main-content-logs {
     flex: 1 1 auto;

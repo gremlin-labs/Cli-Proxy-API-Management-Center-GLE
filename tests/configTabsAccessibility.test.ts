@@ -24,4 +24,20 @@ describe('ConfigTabs accessibility', () => {
 
     expect(markup).toContain(`aria-label="${accessibleLabel}"`);
   });
+
+  test('exposes the list orientation so arrow keys match the layout', () => {
+    const render = (orientation?: 'horizontal' | 'vertical') =>
+      renderToStaticMarkup(
+        createElement(ConfigTabs, {
+          active: 'common',
+          errorCounts: {},
+          dirtyTabs: new Set(),
+          orientation,
+          onChange: noop,
+        })
+      );
+
+    expect(render()).toContain('aria-orientation="horizontal"');
+    expect(render('vertical')).toContain('aria-orientation="vertical"');
+  });
 });

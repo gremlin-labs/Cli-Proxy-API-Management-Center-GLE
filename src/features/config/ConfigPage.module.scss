@@ -24,10 +24,35 @@
   min-width: 0;
 }
 
+.visualStacked {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* Desktop: sticky section list beside the active section. */
+.visualShell {
+  display: grid;
+  grid-template-columns: minmax(176px, 208px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  min-width: 0;
+}
+
 .tabsRow {
   display: flex;
   min-width: 0;
   border-bottom: 1px solid var(--border-color);
+}
+
+.tabsRail {
+  position: sticky;
+  top: calc(var(--header-height, 80px) + 8px);
+  max-height: calc(100dvh - var(--header-height, 80px) - 24px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  min-width: 0;
 }
 
 .panel {

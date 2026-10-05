@@ -333,13 +333,14 @@ export function ConfigPage() {
       </div>
 
       {mode === 'visual' ? (
-        <>
-          <div className={styles.tabsRow} data-reveal>
+        <div className={isMobile ? styles.visualStacked : styles.visualShell}>
+          <div className={isMobile ? styles.tabsRow : styles.tabsRail} data-reveal>
             <ConfigTabs
               active={activeSection}
               errorCounts={errorCounts}
               dirtyTabs={dirtyTabs}
               disabled={doc.saving || doc.loading}
+              orientation={isMobile ? 'horizontal' : 'vertical'}
               onChange={handleSectionChange}
             />
           </div>
@@ -351,7 +352,7 @@ export function ConfigPage() {
           >
             {renderActiveSection()}
           </div>
-        </>
+        </div>
       ) : (
         <SourcePanel
           search={sourceSearch}
