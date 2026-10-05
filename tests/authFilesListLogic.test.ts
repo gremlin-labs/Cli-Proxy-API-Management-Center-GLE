@@ -109,6 +109,14 @@ describe('matchesAuthFileSearch', () => {
     expect(search(file, 'invalid*[credentials]')).toBe(false);
   });
 
+  test('searches the credential note', () => {
+    expect(search(authFile({ name: 'claude-a.json', note: 'Team Max seat' }), 'max seat')).toBe(
+      true
+    );
+    expect(search(authFile({ name: 'claude-b.json', note: 'Team*seat' }), 'team*seat')).toBe(true);
+    expect(search(authFile({ name: 'claude-c.json' }), 'max seat')).toBe(false);
+  });
+
   test('does not search arbitrary credential metadata', () => {
     expect(search(authFile({ metadata: { secret: 'invalid-secret' } }), 'invalid')).toBe(false);
   });

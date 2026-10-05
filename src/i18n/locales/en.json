@@ -318,7 +318,7 @@
     "pagination_next": "Next",
     "pagination_info": "Page {{current}} / {{total}} · {{count}} files",
     "search_label": "Search credentials by name, account, type, provider, or error message",
-    "search_placeholder": "Search name, account, type, provider, or error (403, 429, invalid). Use * as a wildcard",
+    "search_placeholder": "Search name, account, note, type, provider, or error (403, 429, invalid). Use * as a wildcard",
     "problem_filter_label": "Status Filter",
     "problem_filter_all": "All",
     "problem_filter_enabled": "Enabled",

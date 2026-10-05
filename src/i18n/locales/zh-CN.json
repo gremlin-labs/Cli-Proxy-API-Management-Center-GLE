@@ -316,7 +316,7 @@
     "pagination_next": "下一页",
     "pagination_info": "第 {{current}} / {{total}} 页 · 共 {{count}} 个文件",
     "search_label": "按名称、账号、类型、提供方或错误信息搜索凭证",
-    "search_placeholder": "搜索名称、账号、类型、提供方或错误信息（403、429、invalid），支持 * 通配",
+    "search_placeholder": "搜索名称、账号、备注、类型、提供方或错误信息（403、429、invalid），支持 * 通配",
     "problem_filter_label": "状态筛选",
     "problem_filter_all": "全部",
     "problem_filter_enabled": "启用",

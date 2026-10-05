@@ -321,7 +321,7 @@
     "pagination_next": "Следующая",
     "pagination_info": "Страница {{current}} / {{total}} · {{count}} файлов",
     "search_label": "Поиск учётных данных по имени, аккаунту, типу, провайдеру или сообщению об ошибке",
-    "search_placeholder": "Поиск по имени, аккаунту, типу, провайдеру или ошибке (403, 429, invalid). Поддерживается *",
+    "search_placeholder": "Поиск по имени, аккаунту, заметке, типу, провайдеру или ошибке (403, 429, invalid). Поддерживается *",
     "problem_filter_label": "Фильтр статуса",
     "problem_filter_all": "Все",
     "problem_filter_enabled": "Вкл.",

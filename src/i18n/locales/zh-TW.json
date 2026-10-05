@@ -316,7 +316,7 @@
     "pagination_next": "下一頁",
     "pagination_info": "第 {{current}} / {{total}} 頁 · 共 {{count}} 個檔案",
     "search_label": "依名稱、帳號、類型、供應方或錯誤訊息搜尋憑證",
-    "search_placeholder": "搜尋名稱、帳號、類型、供應方或錯誤訊息（403、429、invalid），支援 * 萬用字元",
+    "search_placeholder": "搜尋名稱、帳號、備註、類型、供應方或錯誤訊息（403、429、invalid），支援 * 萬用字元",
     "problem_filter_label": "狀態篩選",
     "problem_filter_all": "全部",
     "problem_filter_enabled": "啟用",
