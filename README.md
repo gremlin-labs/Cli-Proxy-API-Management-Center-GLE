@@ -15,7 +15,7 @@ Manage providers, credentials, quotas, and logs — from a single HTML file.
 
 **English** · [简体中文](README_CN.md)
 
-[Get started](#quick-start) · [Features](#features) · [Development](#development) · [Releases](https://github.com/gremlin-labs/Cli-Proxy-API-Management-Center/releases)
+[Get started](#quick-start) · [Features](#features) · [Development](#development) · [Releases](https://github.com/gremlin-labs/Cli-Proxy-API-Management-Center-GLE/releases)
 
 </div>
 

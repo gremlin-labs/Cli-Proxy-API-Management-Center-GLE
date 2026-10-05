@@ -9,7 +9,7 @@
 # Usage: scripts/release.sh vX.Y.Z-gremlinlabs.N
 set -euo pipefail
 
-REPO="gremlin-labs/Cli-Proxy-API-Management-Center"
+REPO="gremlin-labs/Cli-Proxy-API-Management-Center-GLE"
 TAG="${1:-}"
 
 if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
