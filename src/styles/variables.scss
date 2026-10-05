@@ -46,8 +46,9 @@ $z-modal: 2000;
 $z-notification: 3000;
 
 // 字体
-// 系统字体栈：单文件面板不加载外部字体
+// Instrument Sans 内联于构建产物（见 fonts.scss），系统字体栈兜底
 $font-family:
+  'Instrument Sans',
   ui-sans-serif,
   system-ui,
   -apple-system,

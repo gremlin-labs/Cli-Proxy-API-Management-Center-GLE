@@ -1,0 +1,19 @@
+// Instrument Sans 可变字体（SIL Open Font License 1.1，许可证见 src/assets/fonts/OFL.txt）。
+// 构建时随单文件 management.html 内联，不发起任何外部字体请求。
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('@/assets/fonts/InstrumentSans-Variable.woff2') format('woff2');
+  font-weight: 400 700;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('@/assets/fonts/InstrumentSans-Italic-Variable.woff2') format('woff2');
+  font-weight: 400 700;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+}
