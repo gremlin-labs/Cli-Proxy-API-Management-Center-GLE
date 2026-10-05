@@ -438,7 +438,12 @@
     "batch_cooldown_reset_title": "清除冷却？",
     "batch_cooldown_reset_confirm": "清除所选 {{count}} 个凭证的本地路由冷却？它们可能会立即重新参与请求。此操作不会恢复上游额度。",
     "batch_cooldown_reset_success": "已清除 {{count}} 个凭证的冷却。",
-    "batch_cooldown_reset_partial": "已清除 {{success}} 个冷却，{{failed}} 个失败。"
+    "batch_cooldown_reset_partial": "已清除 {{success}} 个冷却，{{failed}} 个失败。",
+    "priority_pill_title": "路由优先级 {{value}}",
+    "weight_pill_title": "路由权重 {{value}}",
+    "card_last_used": "{{time}}使用",
+    "card_last_used_recent": "最近 10 分钟内使用",
+    "card_last_used_title": "最近 3 小时 20 分钟窗口内的最近一次请求"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",

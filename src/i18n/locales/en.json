@@ -440,7 +440,12 @@
     "batch_cooldown_reset_title": "Clear cooldowns?",
     "batch_cooldown_reset_confirm": "Clear the local routing cooldown for {{count}} selected credentials? They may become eligible for requests immediately. This does not restore upstream quota.",
     "batch_cooldown_reset_success": "Cleared cooldowns for {{count}} credentials.",
-    "batch_cooldown_reset_partial": "Cleared {{success}} cooldowns; {{failed}} failed."
+    "batch_cooldown_reset_partial": "Cleared {{success}} cooldowns; {{failed}} failed.",
+    "priority_pill_title": "Routing priority {{value}}",
+    "weight_pill_title": "Routing weight {{value}}",
+    "card_last_used": "Used {{time}}",
+    "card_last_used_recent": "Used in the last 10 min",
+    "card_last_used_title": "Most recent request in the last 3h 20m window"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",

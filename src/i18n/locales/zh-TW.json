@@ -438,7 +438,12 @@
     "batch_cooldown_reset_title": "清除冷卻？",
     "batch_cooldown_reset_confirm": "清除所選 {{count}} 個憑證的本機路由冷卻？它們可能會立即重新參與請求。此操作不會恢復上游額度。",
     "batch_cooldown_reset_success": "已清除 {{count}} 個憑證的冷卻。",
-    "batch_cooldown_reset_partial": "已清除 {{success}} 個冷卻，{{failed}} 個失敗。"
+    "batch_cooldown_reset_partial": "已清除 {{success}} 個冷卻，{{failed}} 個失敗。",
+    "priority_pill_title": "路由優先級 {{value}}",
+    "weight_pill_title": "路由權重 {{value}}",
+    "card_last_used": "{{time}}使用",
+    "card_last_used_recent": "最近 10 分鐘內使用",
+    "card_last_used_title": "最近 3 小時 20 分鐘視窗內的最近一次請求"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",

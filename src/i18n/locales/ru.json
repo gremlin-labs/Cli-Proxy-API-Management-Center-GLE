@@ -443,7 +443,12 @@
     "batch_cooldown_reset_title": "Сбросить охлаждение?",
     "batch_cooldown_reset_confirm": "Сбросить локальное охлаждение маршрутизации для выбранных учётных данных ({{count}})? Они могут сразу снова получать запросы. Квота у провайдера при этом не восстанавливается.",
     "batch_cooldown_reset_success": "Охлаждение сброшено для {{count}} учётных данных.",
-    "batch_cooldown_reset_partial": "Сброшено: {{success}}; ошибок: {{failed}}."
+    "batch_cooldown_reset_partial": "Сброшено: {{success}}; ошибок: {{failed}}.",
+    "priority_pill_title": "Приоритет маршрутизации {{value}}",
+    "weight_pill_title": "Вес маршрутизации {{value}}",
+    "card_last_used": "Использован {{time}}",
+    "card_last_used_recent": "Использован за последние 10 мин",
+    "card_last_used_title": "Последний запрос в окне 3 ч 20 мин"
   },
   "antigravity_subscription": {
     "plan_unknown": "Неизвестно",

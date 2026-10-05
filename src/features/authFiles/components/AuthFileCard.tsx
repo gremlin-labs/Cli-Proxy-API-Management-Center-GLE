@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/icons';
 import { ProviderStatusBar } from '@/components/providers/ProviderStatusBar';
 import type { AuthFileItem } from '@/types';
-import { statusBarDataFromRecentRequests } from '@/utils/recentRequests';
-import { formatFileSize } from '@/utils/format';
+import { lastActiveBlockAgeMs, statusBarDataFromRecentRequests } from '@/utils/recentRequests';
+import { formatRelativeInstant } from '@/utils/quota/relativeTime';
 import {
   formatModified,
   getAuthFileStatusMessage,
@@ -61,7 +61,7 @@ export type AuthFileCardProps = {
 };
 
 export function AuthFileCard(props: AuthFileCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     file,
     compact,
@@ -105,11 +105,24 @@ export function AuthFileCard(props: AuthFileCardProps) {
     (authIndexKey && statusBarCache.get(authIndexKey)) ||
     statusBarDataFromRecentRequests(file.recentRequests ?? []);
 
+  const lastActiveAgeMs = lastActiveBlockAgeMs(statusData);
+  const lastUsedLabel =
+    lastActiveAgeMs === null
+      ? null
+      : lastActiveAgeMs === 0
+        ? t('auth_files.card_last_used_recent')
+        : t('auth_files.card_last_used', {
+            time: formatRelativeInstant(-lastActiveAgeMs, 0, i18n.language),
+          });
+
   const rawStatusMessage = getAuthFileStatusMessage(file);
   const hasStatusWarning = hasAuthFileStatusWarning(file);
 
-  const priorityValue = Number.isSafeInteger(file.priority) ? file.priority : undefined;
-  const weightValue = Number.isSafeInteger(file.weight) ? file.weight : undefined;
+  // Routing pills show only non-default values.
+  const priorityValue =
+    Number.isSafeInteger(file.priority) && file.priority !== 0 ? file.priority : undefined;
+  const weightValue =
+    Number.isSafeInteger(file.weight) && (file.weight as number) > 0 ? file.weight : undefined;
   const noteValue = typeof file.note === 'string' ? file.note.trim() : '';
   // 主行显示账号（email/项目 ID），文件名降为满卡宽的 mono 副行
   const identity = deriveAuthFileIdentity(file);
@@ -160,6 +173,26 @@ export function AuthFileCard(props: AuthFileCardProps) {
             {identity.primary}
           </span>
         </h3>
+        {(priorityValue !== undefined || weightValue !== undefined) && (
+          <span className={styles.routingPills}>
+            {priorityValue !== undefined && (
+              <span className={styles.metaPriority} title={t('auth_files.priority_hint')}>
+                <span aria-hidden="true">P{priorityValue}</span>
+                <span className={styles.srOnly}>
+                  {t('auth_files.priority_pill_title', { value: priorityValue })}
+                </span>
+              </span>
+            )}
+            {weightValue !== undefined && (
+              <span className={styles.metaWeight} title={t('auth_files.weight_tooltip')}>
+                <span aria-hidden="true">W{weightValue}</span>
+                <span className={styles.srOnly}>
+                  {t('auth_files.weight_pill_title', { value: weightValue })}
+                </span>
+              </span>
+            )}
+          </span>
+        )}
         {isRuntimeOnly && (
           <span className={styles.runtimeLabel}>{t('auth_files.type_virtual')}</span>
         )}
@@ -217,33 +250,15 @@ export function AuthFileCard(props: AuthFileCardProps) {
       </div>
 
       <div className={styles.metaRow}>
-        <span title={t('auth_files.file_size')}>{file.size ? formatFileSize(file.size) : '-'}</span>
-        <span className={styles.metaDivider} aria-hidden="true">
-          ·
-        </span>
+        {lastUsedLabel && (
+          <>
+            <span title={t('auth_files.card_last_used_title')}>{lastUsedLabel}</span>
+            <span className={styles.metaDivider} aria-hidden="true">
+              ·
+            </span>
+          </>
+        )}
         <span title={t('auth_files.file_modified')}>{formatModified(file)}</span>
-        {priorityValue !== undefined && (
-          <>
-            <span className={styles.metaDivider} aria-hidden="true">
-              ·
-            </span>
-            <span className={styles.metaPriority} title={t('auth_files.priority_hint')}>
-              <span className={styles.metaMetricLabel}>{t('auth_files.priority_display')}</span>
-              <span>{priorityValue}</span>
-            </span>
-          </>
-        )}
-        {weightValue !== undefined && (
-          <>
-            <span className={styles.metaDivider} aria-hidden="true">
-              ·
-            </span>
-            <span className={styles.metaWeight} title={t('auth_files.weight_tooltip')}>
-              <span className={styles.metaMetricLabel}>{t('auth_files.weight_display')}</span>
-              <span>{weightValue}</span>
-            </span>
-          </>
-        )}
       </div>
 
       {showQuotaLayout && quotaType && (

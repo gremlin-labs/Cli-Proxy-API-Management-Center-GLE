@@ -220,3 +220,16 @@ export function statusBarDataFromRecentRequests(buckets: RecentRequestBucket[]):
     totalFailure,
   };
 }
+
+/**
+ * Lower bound on how long ago the newest non-idle bucket was, in whole buckets.
+ * 0 means activity in the current bucket; null means no activity in the window.
+ */
+export function lastActiveBlockAgeMs(data: StatusBarData): number | null {
+  for (let index = data.blocks.length - 1; index >= 0; index--) {
+    if (data.blocks[index] !== 'idle') {
+      return (data.blocks.length - 1 - index) * RECENT_REQUEST_BLOCK_DURATION_MS;
+    }
+  }
+  return null;
+}

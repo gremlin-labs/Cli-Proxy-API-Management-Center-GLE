@@ -79,4 +79,32 @@ describe('auth file card presentation contract', () => {
     expect(source).toContain('showManualRefreshButton');
     expect(source).toContain('file.disabled ||');
   });
+
+  test('shows routing priority and weight as header pills only when non-default', () => {
+    const header = source.split('<header')[1].split('</header>')[0];
+    expect(header).toContain('P{priorityValue}');
+    expect(header).toContain('W{weightValue}');
+    expect(source).toContain('file.priority !== 0');
+    expect(source).toContain('(file.weight as number) > 0');
+    expect(source).not.toContain('formatFileSize');
+  });
+
+  test('labels the last request time in every locale', () => {
+    expect(source).toContain('lastActiveBlockAgeMs(statusData)');
+    for (const locale of ['en', 'zh-CN', 'zh-TW', 'ru']) {
+      const { auth_files: messages } = JSON.parse(
+        readFileSync(new URL(`../src/i18n/locales/${locale}.json`, import.meta.url), 'utf8')
+      ) as { auth_files: Record<string, string> };
+      for (const key of [
+        'card_last_used',
+        'card_last_used_recent',
+        'card_last_used_title',
+        'priority_pill_title',
+        'weight_pill_title',
+      ]) {
+        expect(messages[key]?.trim()).toBeTruthy();
+      }
+      expect(messages.card_last_used).toContain('{{time}}');
+    }
+  });
 });
