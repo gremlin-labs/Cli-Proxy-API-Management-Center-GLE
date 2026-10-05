@@ -4,7 +4,7 @@ import '@/styles/global.scss';
 import App from './App.tsx';
 import { BRAND_APPLE_TOUCH_ICON_URL, BRAND_FAVICON_URL } from '@/assets/logoInline';
 
-document.title = 'CPAMC++';
+document.title = 'CLI PROXY GLE';
 document.documentElement.setAttribute('translate', 'no');
 document.documentElement.classList.add('notranslate');
 

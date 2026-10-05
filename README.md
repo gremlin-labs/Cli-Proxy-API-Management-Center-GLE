@@ -1,4 +1,4 @@
-# CLI Proxy API Management Center
+# CLI PROXY GLE — Management Panel
 
 A clean, compact control panel for managing a CLI Proxy API server and the accounts behind it.
 

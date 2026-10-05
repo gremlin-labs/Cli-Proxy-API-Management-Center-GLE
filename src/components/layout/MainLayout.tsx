@@ -255,7 +255,7 @@ export function MainLayout() {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
 
-  const fullBrandName = 'CPAMC++';
+  const fullBrandName = 'CLI PROXY GLE';
   const abbrBrandName = t('title.abbr');
   const isLogsPage = location.pathname.startsWith('/logs');
   const isPluginResourcePage = location.pathname.startsWith('/plugin-pages');
@@ -761,7 +761,7 @@ export function MainLayout() {
           className={`sidebar ${sidebarOpen ? 'open' : ''} ${sidebarCollapsed ? 'collapsed' : ''}`}
         >
           <div className="sidebar-brand" title={fullBrandName}>
-            <img src={INLINE_LOGO_JPEG} alt="CPAMC++ logo" className="sidebar-brand-logo" />
+            <img src={INLINE_LOGO_JPEG} alt="CLI PROXY GLE logo" className="sidebar-brand-logo" />
             {showSidebarLabels && <span className="sidebar-brand-title">{abbrBrandName}</span>}
           </div>
 
