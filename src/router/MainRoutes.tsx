@@ -6,8 +6,6 @@ import { AuthFilesOAuthExcludedEditPage } from '@/pages/AuthFilesOAuthExcludedEd
 import { AuthFilesOAuthModelAliasEditPage } from '@/pages/AuthFilesOAuthModelAliasEditPage';
 import { OAuthPage } from '@/pages/OAuthPage';
 import { CodexInstructionsPage } from '@/pages/CodexInstructionsPage';
-import { QoderConfigPage } from '@/pages/QoderConfigPage';
-import { XAIConfigPage } from '@/pages/XAIConfigPage';
 import { DesensitizationPage } from '@/pages/DesensitizationPage';
 import { ModelContextPage } from '@/pages/ModelContextPage';
 import { QuotaPage } from '@/pages/QuotaPage';
@@ -33,8 +31,6 @@ const createMainRoutes = (supportsPlugin: boolean) => [
   { path: '/auth-files/oauth-model-alias', element: <AuthFilesOAuthModelAliasEditPage /> },
   { path: '/oauth', element: <OAuthPage /> },
   { path: '/codex-instructions', element: <CodexInstructionsPage /> },
-  { path: '/qoder-config', element: <QoderConfigPage /> },
-  { path: '/xai-config', element: <XAIConfigPage /> },
   { path: '/desensitization', element: <DesensitizationPage /> },
   { path: '/quota', element: <QuotaPage /> },
   { path: '/model-context', element: <ModelContextPage /> },

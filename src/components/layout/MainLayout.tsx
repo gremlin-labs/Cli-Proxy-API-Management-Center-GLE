@@ -33,9 +33,6 @@ import {
 } from '@/components/ui/icons';
 import { INLINE_LOGO_JPEG } from '@/assets/logoInline';
 import iconCodex from '@/assets/icons/codex.svg';
-import iconGrok from '@/assets/icons/grok.svg';
-import iconGrokDark from '@/assets/icons/grok-dark.svg';
-import iconQoderCN from '@/assets/icons/qodercn.svg';
 import {
   useAuthStore,
   useConfigStore,
@@ -242,7 +239,6 @@ export function MainLayout() {
 
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
-  const resolvedTheme = useThemeStore((state) => state.resolvedTheme);
   const language = useLanguageStore((state) => state.language);
   const setLanguage = useLanguageStore((state) => state.setLanguage);
 
@@ -522,19 +518,9 @@ export function MainLayout() {
       labelKey: 'nav_groups.provider_specific',
       items: [
         {
-          path: '/qoder-config',
-          labelKey: 'nav.qoder_config',
-          icon: <BrandNavIcon src={iconQoderCN} alt="Qoder" />,
-        },
-        {
           path: '/codex-instructions',
           labelKey: 'nav.codex_config',
           icon: <BrandNavIcon src={iconCodex} alt="Codex" />,
-        },
-        {
-          path: '/xai-config',
-          labelKey: 'nav.xai_config',
-          icon: <BrandNavIcon src={resolvedTheme === 'dark' ? iconGrokDark : iconGrok} alt="xAI" />,
         },
       ],
     },
