@@ -555,6 +555,14 @@ export function AuthFilesPage() {
     setPage(1);
   }, []);
 
+  // Toolbar variant keeps the selected provider tab, which has its own control.
+  const clearToolbarFilters = useCallback(() => {
+    setStatusFilterMode('all');
+    setSearch('');
+    setPage(1);
+  }, []);
+  const hasToolbarFilters = search.trim() !== '' || statusFilterMode !== 'all';
+
   const deleteAllButtonLabel = (() => {
     if (enabledOnly || disabledOnly) {
       return t('auth_files.delete_filtered_result_button');
@@ -636,6 +644,8 @@ export function AuthFilesPage() {
           sortMode={sortMode}
           sortOptions={sortOptions}
           onSortModeChange={handleSortModeChange}
+          onClearFilters={clearToolbarFilters}
+          hasActiveFilters={hasToolbarFilters}
           pageSizeInput={pageSizeInput}
           onPageSizeInputChange={handlePageSizeChange}
           onPageSizeCommit={commitPageSizeInput}

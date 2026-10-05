@@ -4,15 +4,9 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
-import { IconSearch, IconSlidersHorizontal, IconTrash2 } from '@/components/ui/icons';
-import {
-  MAX_CARD_PAGE_SIZE,
-  MIN_CARD_PAGE_SIZE,
-} from '@/features/authFiles/constants';
-import type {
-  AuthFilesSortMode,
-  AuthFilesStatusFilterMode,
-} from '@/features/authFiles/uiState';
+import { IconSearch, IconSlidersHorizontal, IconTrash2, IconX } from '@/components/ui/icons';
+import { MAX_CARD_PAGE_SIZE, MIN_CARD_PAGE_SIZE } from '@/features/authFiles/constants';
+import type { AuthFilesSortMode, AuthFilesStatusFilterMode } from '@/features/authFiles/uiState';
 import styles from './AuthFilesToolbar.module.scss';
 
 export type AuthFilesToolbarProps = {
@@ -24,6 +18,9 @@ export type AuthFilesToolbarProps = {
   sortMode: AuthFilesSortMode;
   sortOptions: Array<{ value: string; label: string }>;
   onSortModeChange: (value: string) => void;
+  /** Shown only while search or the status filter narrows the list; keeps the provider tab. */
+  onClearFilters?: () => void;
+  hasActiveFilters?: boolean;
   pageSizeInput: string;
   onPageSizeInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onPageSizeCommit: (rawValue: string) => void;
@@ -49,6 +46,8 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
     sortMode,
     sortOptions,
     onSortModeChange,
+    onClearFilters,
+    hasActiveFilters = false,
     pageSizeInput,
     onPageSizeInputChange,
     onPageSizeCommit,
@@ -131,6 +130,13 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
         />
       </div>
 
+      {onClearFilters && hasActiveFilters ? (
+        <button type="button" className={styles.displayButton} onClick={onClearFilters}>
+          <IconX size={14} />
+          <span>{t('auth_files.clear_filters_button')}</span>
+        </button>
+      ) : null}
+
       <div className={styles.display} ref={displaySettingsRef}>
         <button
           type="button"
@@ -138,7 +144,7 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
           aria-expanded={displaySettingsOpen}
           aria-controls="auth-files-display-settings"
           title={t('auth_files.display_options_label')}
-        onClick={() => setDisplaySettingsOpen((open) => !open)}
+          onClick={() => setDisplaySettingsOpen((open) => !open)}
         >
           <IconSlidersHorizontal size={15} />
           <span>{t('auth_files.display_options_label')}</span>
