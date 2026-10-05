@@ -153,12 +153,13 @@ export function LoginPage() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (!managementKey.trim()) {
+    // The key may be empty: a proxy with management.local-without-key accepts keyless
+    // requests from this machine, and any other proxy answers 401.
+    const baseToUse = apiBase ? normalizeApiBase(apiBase) : detectedBase;
+    if (!baseToUse) {
       setError(t('login.error_required'));
       return;
     }
-
-    const baseToUse = apiBase ? normalizeApiBase(apiBase) : detectedBase;
     setLoading(true);
     setError('');
     try {
