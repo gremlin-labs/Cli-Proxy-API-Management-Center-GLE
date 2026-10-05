@@ -1,4 +1,4 @@
-import type { AuthFileCooldown, AuthFileCooldownSnapshot } from '@/types/authFile';
+import type { AuthFileCooldown, AuthFileCooldownSnapshot, AuthFileItem } from '@/types/authFile';
 
 const REASON_KEYS: Record<string, string> = {
   quota: 'auth_files.cooldown_reason_quota',
@@ -41,4 +41,17 @@ export function summarizeCooldowns(snapshot: AuthFileCooldownSnapshot, nowMs: nu
     credentialWide: active.some((row) => row.record.scope === 'credential'),
     earliestSeconds: active.length ? Math.min(...active.map((row) => row.remainingSeconds)) : 0,
   };
+}
+
+/**
+ * Whether a credential is currently cooling down. Uses the server-measured cooldown
+ * timers when known; when the server reports runtime state as unknown (records null,
+ * e.g. in Home mode) it falls back to the server's own unavailable flag.
+ */
+export function isCoolingAuthFile(file: AuthFileItem, nowMs: number): boolean {
+  const snapshot = file.cooldownSnapshot;
+  if (snapshot && snapshot.records !== null) {
+    return summarizeCooldowns(snapshot, nowMs).rows.some((row) => row.remainingSeconds > 0);
+  }
+  return file.unavailable === true;
 }

@@ -434,7 +434,8 @@
     "quota_refresh_hint": "Refresh quota only for this credential",
     "quota_refresh_success": "Quota refreshed for \"{{name}}\"",
     "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}",
-    "clear_filters_button": "Clear filters"
+    "clear_filters_button": "Clear filters",
+    "problem_filter_cooling": "Cooling"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",

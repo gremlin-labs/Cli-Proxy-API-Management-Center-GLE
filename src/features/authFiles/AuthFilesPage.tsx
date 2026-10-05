@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useInterval } from '@/hooks/useInterval';
+import { useNow } from '@/hooks/useNow';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { useRevealOnScroll } from '@/hooks/motion';
 import { usePageTransitionLayer } from '@/components/common/PageTransitionLayer';
@@ -34,6 +35,7 @@ import { ProviderTabs } from '@/features/authFiles/components/ProviderTabs';
 import { VaultHeader } from '@/features/authFiles/components/VaultHeader';
 import { VaultPulse } from '@/features/authFiles/components/VaultPulse';
 import { invalidateAuthFileDerivedCaches } from '@/features/authFiles/cacheInvalidation';
+import { isCoolingAuthFile } from '@/features/authFiles/cooldowns';
 import {
   buildWildcardSearch,
   matchesAuthFileSearch,
@@ -200,6 +202,9 @@ export function AuthFilesPage() {
   const problemOnly = statusFilterMode === 'problem';
   const disabledOnly = statusFilterMode === 'disabled';
   const enabledOnly = statusFilterMode === 'enabled';
+  const coolingOnly = statusFilterMode === 'cooling';
+  // Minute clock: expired cooldowns drop out of the Cooling filter without a reload.
+  const now = useNow(coolingOnly);
 
   /* ---------- uiState 水合与持久化（localStorage key/形状与旧版完全一致） ---------- */
 
@@ -403,9 +408,10 @@ export function AuthFilesPage() {
         if (enabledOnly && file.disabled === true) return false;
         if (disabledOnly && file.disabled !== true) return false;
         if (problemOnly && !isProblemAuthFile(file)) return false;
+        if (coolingOnly && !isCoolingAuthFile(file, now)) return false;
         return true;
       }),
-    [disabledOnly, enabledOnly, files, problemOnly]
+    [coolingOnly, disabledOnly, enabledOnly, files, now, problemOnly]
   );
 
   const statusFilterOptions = useMemo(
@@ -415,6 +421,7 @@ export function AuthFilesPage() {
         { value: 'enabled', label: t('auth_files.problem_filter_enabled') },
         { value: 'disabled', label: t('auth_files.problem_filter_disabled') },
         { value: 'problem', label: t('auth_files.problem_filter_problem') },
+        { value: 'cooling', label: t('auth_files.problem_filter_cooling') },
       ] satisfies Array<{ value: AuthFilesStatusFilterMode; label: string }>,
     [t]
   );
@@ -564,7 +571,7 @@ export function AuthFilesPage() {
   const hasToolbarFilters = search.trim() !== '' || statusFilterMode !== 'all';
 
   const deleteAllButtonLabel = (() => {
-    if (enabledOnly || disabledOnly) {
+    if (enabledOnly || disabledOnly || coolingOnly) {
       return t('auth_files.delete_filtered_result_button');
     }
     if (problemOnly) {
@@ -652,7 +659,10 @@ export function AuthFilesPage() {
           compactMode={compactMode}
           onCompactModeChange={setCompactMode}
           deleteLabel={deleteAllButtonLabel}
-          deleteDisabled={disableControls || loading || deletingAll || files.length === 0}
+          // Delete-all has no cooling scope; use selection to delete cooling credentials.
+          deleteDisabled={
+            disableControls || loading || deletingAll || files.length === 0 || coolingOnly
+          }
           deleteLoading={deletingAll}
           onDelete={() =>
             handleDeleteAll({

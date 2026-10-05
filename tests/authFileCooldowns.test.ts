@@ -8,6 +8,7 @@ import { apiClient } from '../src/services/api/client';
 import {
   cooldownReasonKey,
   cooldownRemainingSeconds,
+  isCoolingAuthFile,
   summarizeCooldowns,
 } from '../src/features/authFiles/cooldowns';
 import { AuthFileCooldownSection } from '../src/features/authFiles/components/AuthFileCooldownSection';
@@ -270,5 +271,40 @@ describe('cooldown section rendering', () => {
         }
       }
     }
+  });
+});
+
+describe('cooling status filter', () => {
+  test('matches credentials with an active server-measured cooldown', () => {
+    const file = { name: 'a.json', cooldownSnapshot: snapshot };
+    expect(isCoolingAuthFile(file, receivedAtMs)).toBe(true);
+    expect(isCoolingAuthFile(file, receivedAtMs + 33_000)).toBe(false);
+  });
+
+  test('a known empty snapshot is not cooling, even if the server marks it unavailable', () => {
+    const empty = normalize([])!;
+    expect(isCoolingAuthFile({ name: 'a.json', cooldownSnapshot: empty }, receivedAtMs)).toBe(
+      false
+    );
+    expect(
+      isCoolingAuthFile(
+        { name: 'a.json', cooldownSnapshot: empty, unavailable: true },
+        receivedAtMs
+      )
+    ).toBe(false);
+  });
+
+  test('falls back to the unavailable flag when runtime state is unknown', () => {
+    const unknown = { observedAt, receivedAtMs, records: null };
+    expect(
+      isCoolingAuthFile(
+        { name: 'a.json', cooldownSnapshot: unknown, unavailable: true },
+        receivedAtMs
+      )
+    ).toBe(true);
+    expect(isCoolingAuthFile({ name: 'a.json', cooldownSnapshot: unknown }, receivedAtMs)).toBe(
+      false
+    );
+    expect(isCoolingAuthFile({ name: 'a.json', unavailable: true }, receivedAtMs)).toBe(true);
   });
 });
