@@ -79,7 +79,7 @@ describe('Command Code API key provider', () => {
     expect(descriptor.supportsHeaders).toBe(true);
     expect(descriptor.supportsExcludedModels).toBe(true);
     expect(descriptor.supportsProxyUrl).toBe(true);
-    // Command Code has no OAuth flow, no websockets and no private instructions.
+    // Command Code has no OAuth flow and no websockets.
     expect(descriptor.supportsWebsockets).toBe(false);
     expect(descriptor.supportsCloak).toBe(false);
     expect(PROVIDER_LOGOS.commandcode.src.length).toBeGreaterThan(0);
@@ -188,7 +188,6 @@ describe('Command Code API key provider', () => {
     expect(formHtml).toContain('Custom models');
     // ... while Codex-only / OAuth-only surfaces are not.
     expect(formHtml).not.toContain('Enable WebSockets');
-    expect(formHtml).not.toContain('Allow private instructions');
     expect(formHtml).not.toContain('Cloak settings');
     expect(formHtml).not.toContain('API key entries');
     expect(formHtml).not.toContain('Test model');
@@ -234,7 +233,6 @@ describe('Command Code API key provider', () => {
       baseUrl: 'https://api.commandcode.ai',
       // Even if a caller passes Codex-only flags, the known-field list strips them.
       websockets: true,
-      allowPrivateInstructions: true,
     });
 
     expect(calls[1]).toEqual({

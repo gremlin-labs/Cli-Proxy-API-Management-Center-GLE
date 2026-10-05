@@ -130,7 +130,6 @@ const EMPTY_BADGES: string[] = [];
 interface InitialUiState {
   filter: string;
   statusFilterMode: AuthFilesStatusFilterMode;
-  privateInstructionsOnly: boolean;
   compactMode: boolean;
   search: string;
   page: number;
@@ -148,7 +147,6 @@ const readInitialUiState = (): InitialUiState => {
   const initial: InitialUiState = {
     filter: 'all',
     statusFilterMode: 'all',
-    privateInstructionsOnly: false,
     compactMode: false,
     search: '',
     page: 1,
@@ -184,9 +182,6 @@ const readInitialUiState = (): InitialUiState => {
   }
   if (typeof persistedCompactMode !== 'boolean' && typeof persisted.compactMode === 'boolean') {
     initial.compactMode = persisted.compactMode;
-  }
-  if (typeof persisted.privateInstructionsOnly === 'boolean') {
-    initial.privateInstructionsOnly = persisted.privateInstructionsOnly;
   }
   if (typeof persisted.search === 'string') {
     initial.search = persisted.search;
@@ -233,9 +228,6 @@ export function AuthFilesPage() {
   const [filter, setFilter] = useState<'all' | string>(initialUi.filter);
   const [statusFilterMode, setStatusFilterMode] = useState<AuthFilesStatusFilterMode>(
     initialUi.statusFilterMode
-  );
-  const [privateInstructionsOnly, setPrivateInstructionsOnly] = useState(
-    initialUi.privateInstructionsOnly
   );
   const [compactMode, setCompactMode] = useState(initialUi.compactMode);
   const [search, setSearch] = useState(initialUi.search);
@@ -314,7 +306,6 @@ export function AuthFilesPage() {
     batchResetCooldown,
     batchSetPriority,
     batchSetWeight,
-    batchSetJailbreak,
   } = useAuthFilesData({ onCooldownReset: clearCodexRefreshState });
 
   const {
@@ -387,7 +378,6 @@ export function AuthFilesPage() {
       statusFilterMode,
       problemOnly,
       disabledOnly,
-      privateInstructionsOnly,
       compactMode,
       search,
       page,
@@ -405,7 +395,6 @@ export function AuthFilesPage() {
     page,
     pageSize,
     pageSizeByMode,
-    privateInstructionsOnly,
     problemOnly,
     search,
     sortMode,
@@ -479,7 +468,6 @@ export function AuthFilesPage() {
   const clearFilters = useCallback(() => {
     // Keep the provider tab; only reset search, dropdowns, and display toggles.
     setStatusFilterMode('all');
-    setPrivateInstructionsOnly(false);
     setCompactMode(false);
     setSearch('');
     setPage(1);
@@ -549,7 +537,6 @@ export function AuthFilesPage() {
       files.filter((file) => {
         if (enabledOnly && file.disabled === true) return false;
         if (disabledOnly && file.disabled !== true) return false;
-        if (privateInstructionsOnly && !file.allow_private_instructions) return false;
         if (isCodexSelected) {
           const refreshed = codexRefreshByName[file.name];
           const codexStatus = getCodexAccountStatus(file, refreshed);
@@ -575,7 +562,6 @@ export function AuthFilesPage() {
       files,
       isCodexSelected,
       isXaiSelected,
-      privateInstructionsOnly,
       problemOnly,
       xaiStatusFilter,
     ]
@@ -829,16 +815,6 @@ export function AuthFilesPage() {
     selectedHasStatusUpdating;
   const batchFieldsButtonsDisabled =
     disableControls || selectedNames.length === 0 || batchFieldsSaving;
-  const selectedCodexCount = useMemo(() => {
-    if (selectedNames.length === 0) return 0;
-    const selectedSet = new Set(selectedNames);
-    return files.filter(
-      (file) =>
-        selectedSet.has(file.name) &&
-        !isRuntimeOnlyAuthFile(file) &&
-        normalizeProviderKey(String(file.type ?? file.provider ?? '')) === 'codex'
-    ).length;
-  }, [files, selectedNames]);
 
   const applyBatchWeight = useCallback(() => {
     const trimmed = batchWeightInput.trim();
@@ -1309,15 +1285,6 @@ export function AuthFilesPage() {
                       ariaLabel={t('auth_files.compact_mode_label')}
                       label={t('auth_files.compact_mode_label')}
                     />
-                    <ToggleSwitch
-                      checked={privateInstructionsOnly}
-                      onChange={(value) => {
-                        setPrivateInstructionsOnly(value);
-                        setPage(1);
-                      }}
-                      ariaLabel={t('auth_files.private_instructions_only_label')}
-                      label={t('auth_files.private_instructions_only_label')}
-                    />
                   </div>
                 </div>
               </div>
@@ -1549,30 +1516,6 @@ export function AuthFilesPage() {
                       </Button>
                     </div>
                   </div>
-                  {selectedCodexCount > 0 && (
-                    <div className={styles.batchActionGroup}>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => void batchSetJailbreak(selectedNames, true)}
-                        disabled={batchFieldsButtonsDisabled}
-                        loading={batchFieldsSaving}
-                        title={t('auth_files.batch_jailbreak_title_enable')}
-                      >
-                        {t('auth_files.batch_jailbreak_enable')}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => void batchSetJailbreak(selectedNames, false)}
-                        disabled={batchFieldsButtonsDisabled}
-                        loading={batchFieldsSaving}
-                        title={t('auth_files.batch_jailbreak_title_disable')}
-                      >
-                        {t('auth_files.batch_jailbreak_disable')}
-                      </Button>
-                    </div>
-                  )}
                   <div className={`${styles.batchActionGroup} ${styles.batchStatusGroup}`}>
                     <Button
                       size="sm"

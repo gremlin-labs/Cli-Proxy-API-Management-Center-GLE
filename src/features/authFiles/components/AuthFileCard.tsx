@@ -230,7 +230,6 @@ export const AuthFileCard = memo(function AuthFileCard(props: AuthFileCardProps)
   const noteValue = typeof file.note === 'string' ? file.note.trim() : '';
   const disabledReason =
     typeof file.disabled_reason === 'string' ? file.disabled_reason.trim() : '';
-  const allowPrivateInstructions = Boolean(file.allow_private_instructions);
 
   return (
     <div
@@ -292,14 +291,6 @@ export const AuthFileCard = memo(function AuthFileCard(props: AuthFileCardProps)
                     {qoderRegion === 'cn'
                       ? t('auth_files.qoder_region_badge_cn')
                       : t('auth_files.qoder_region_badge_intl')}
-                  </span>
-                )}
-                {providerKey === 'codex' && allowPrivateInstructions && (
-                  <span
-                    className={styles.privateInstructionsBadge}
-                    title={t('auth_files.allow_private_instructions_display')}
-                  >
-                    {t('auth_files.allow_private_instructions_badge')}
                   </span>
                 )}
                 {priorityValue != null && priorityValue > 0 && (

@@ -96,7 +96,7 @@ When both sides touch the same feature, **keep fork behavior** if equal or bette
 - Monitoring page → `/v0/management/usage-*` endpoints (events, summary, filter-options, account-stats, api-key-stats)
 - Model prices / aliases / sync controls
 - Qoder CN and Qoder international OAuth entry points (`/qodercn-auth-url`, `/qoder-auth-url`) and provider cards
-- Codex private-instructions / instructions config UI (auth files + Codex AI provider Jailbreak allow)
+- Codex custom instructions config UI (plain instructions only; the CPAMC++ private-instructions account segregation, `allow_private_instructions` flags and third-party instruction-template importer are intentionally excluded — do not re-adopt them)
 - xAI / Codex failure-policy config surfaces
 - Model context overrides management
 - Playground and other fork-only management surfaces

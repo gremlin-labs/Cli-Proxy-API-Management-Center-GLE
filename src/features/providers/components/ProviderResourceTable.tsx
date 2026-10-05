@@ -138,9 +138,6 @@ export function ProviderResourceTable({
       if ((r.brand === 'codex' || r.brand === 'xai') && r.flags.websockets) {
         items.push(renderFlagTag('ws', t('providersPage.table.websocketsTag')));
       }
-      if (r.brand === 'codex' && r.flags.allowPrivateInstructions) {
-        items.push(renderFlagTag('jailbreak', t('providersPage.table.jailbreakTag')));
-      }
       if ((r.brand === 'claude' || r.brand === 'claudeApi') && r.flags.cloakEnabled) {
         items.push(renderFlagTag('cloak', t('providersPage.table.cloakTag')));
       }

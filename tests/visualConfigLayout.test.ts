@@ -28,7 +28,7 @@ upstream:
   xai: {auto-disable-permission-denied: true, future-policy: retained}
 oauth:
   providers:
-    codex: {private-instructions: {content: private}}
+    codex: {future-block: {content: untouched}}
 future: retained
 `;
 
@@ -58,7 +58,7 @@ describe('fork visual editor canonical YAML compatibility', () => {
     expect(runVisualConfig(output).visualValues.apiKeysText).toBe('new-key\tNamed');
     expect(output).toContain('preserve payload');
     expect(output).toContain('future-policy: retained');
-    expect(output).toContain('content: private');
+    expect(output).toContain('content: untouched');
   });
   test('empty client keys delete access keys only; Excel toggle preserves other groups', () => {
     const output = runVisualConfig(yaml, [

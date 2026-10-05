@@ -33,12 +33,8 @@ const PROVIDER_COMMON_KEY_FIELDS = [
 
 const GEMINI_KEY_FIELDS = PROVIDER_COMMON_KEY_FIELDS;
 const INTERACTIONS_KEY_FIELDS = PROVIDER_COMMON_KEY_FIELDS;
-const CODEX_KEY_FIELDS = [
-  ...PROVIDER_COMMON_KEY_FIELDS,
-  'websockets',
-  'allow_private_instructions',
-] as const;
-/** Command Code reuses the Codex credential shape but has no websockets / private instructions. */
+const CODEX_KEY_FIELDS = [...PROVIDER_COMMON_KEY_FIELDS, 'websockets'] as const;
+/** Command Code reuses the Codex credential shape but has no websockets. */
 const COMMANDCODE_KEY_FIELDS = PROVIDER_COMMON_KEY_FIELDS;
 const META_KEY_FIELDS = PROVIDER_COMMON_KEY_FIELDS;
 const XAI_KEY_FIELDS = [...PROVIDER_COMMON_KEY_FIELDS, 'websockets'] as const;
@@ -343,7 +339,6 @@ const serializeProviderKey = (config: ProviderKeyConfig) => {
   if (config.websockets !== undefined) payload.websockets = config.websockets;
   if (config.proxyUrl) payload['proxy-url'] = config.proxyUrl;
   if (config.disableCooling !== undefined) payload['disable-cooling'] = config.disableCooling;
-  if (config.allowPrivateInstructions) payload.allow_private_instructions = true;
   const headers = serializeHeaders(config.headers);
   if (headers) payload.headers = headers;
   const models = serializeModelAliases(config.models);
@@ -374,14 +369,13 @@ const serializeProviderKey = (config: ProviderKeyConfig) => {
 };
 
 /**
- * Command Code reuses the Codex credential shape, but websockets and private
- * instructions are Codex-only fields that mean nothing for this provider and
- * must never be written back into its config section.
+ * Command Code reuses the Codex credential shape, but websockets is a
+ * Codex-only field that means nothing for this provider and must never be
+ * written back into its config section.
  */
 const serializeCommandCodeKey = (config: ProviderKeyConfig) => {
   const payload = serializeProviderKey(config);
   delete payload.websockets;
-  delete payload.allow_private_instructions;
   return payload;
 };
 

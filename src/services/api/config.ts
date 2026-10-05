@@ -30,13 +30,6 @@ const DEFAULT_CODEX_INSTRUCTIONS: CodexInstructionsConfig = {
   file: '',
   models: ['gpt-5.5', 'gpt-5*'],
   oauthOnly: true,
-  requireAuthAllow: true,
-  reserveMarkedAuths: false,
-  usePrefixSuffix: true,
-  requestMarkers: {
-    prefixes: ['private/'],
-    suffixes: [],
-  },
 };
 
 const DEFAULT_QODER_CONFIG: QoderConfig = {
@@ -59,13 +52,6 @@ const DEFAULT_CODEX_FAILURE_CONFIG: CodexFailureConfig = {
   usageLimitCooldownFallbackHours: 1,
 };
 
-function normalizeStringList(values: unknown, fallback: string[]): string[] {
-  if (!Array.isArray(values)) return fallback;
-  return values
-    .filter((value) => typeof value === 'string' && value.trim())
-    .map((value) => String(value).trim());
-}
-
 function normalizeCodexInstructionsResponse(
   raw: RawCodexInstructionsConfig
 ): CodexInstructionsConfig {
@@ -75,7 +61,6 @@ function normalizeCodexInstructionsResponse(
         .filter((model) => typeof model === 'string' && model.trim())
         .map((model) => model.trim())
     : DEFAULT_CODEX_INSTRUCTIONS.models;
-  const markers = raw['request-markers'] ?? raw.requestMarkers ?? {};
 
   return {
     enabled: Boolean(raw.enabled),
@@ -84,29 +69,6 @@ function normalizeCodexInstructionsResponse(
     file: typeof raw.file === 'string' ? raw.file : '',
     models: models.length > 0 ? models : DEFAULT_CODEX_INSTRUCTIONS.models,
     oauthOnly: typeof raw['oauth-only'] === 'boolean' ? raw['oauth-only'] : raw.oauthOnly !== false,
-    requireAuthAllow:
-      typeof raw['require-auth-allow'] === 'boolean'
-        ? raw['require-auth-allow']
-        : raw.requireAuthAllow !== false,
-    reserveMarkedAuths: Boolean(
-      typeof raw['reserve-marked-auths'] === 'boolean'
-        ? raw['reserve-marked-auths']
-        : raw.reserveMarkedAuths
-    ),
-    usePrefixSuffix:
-      typeof raw['use-prefix-suffix'] === 'boolean'
-        ? raw['use-prefix-suffix']
-        : raw.usePrefixSuffix !== false,
-    requestMarkers: {
-      prefixes: normalizeStringList(
-        markers.prefixes,
-        DEFAULT_CODEX_INSTRUCTIONS.requestMarkers.prefixes
-      ),
-      suffixes: normalizeStringList(
-        markers.suffixes,
-        DEFAULT_CODEX_INSTRUCTIONS.requestMarkers.suffixes
-      ),
-    },
   };
 }
 
@@ -118,13 +80,6 @@ function serializeCodexInstructions(config: CodexInstructionsConfig): RawCodexIn
     file: config.file,
     models: config.models.map((model) => model.trim()).filter(Boolean),
     'oauth-only': config.oauthOnly,
-    'require-auth-allow': config.requireAuthAllow,
-    'reserve-marked-auths': config.reserveMarkedAuths,
-    'use-prefix-suffix': config.usePrefixSuffix,
-    'request-markers': {
-      prefixes: config.requestMarkers.prefixes.map((value) => value.trim()).filter(Boolean),
-      suffixes: config.requestMarkers.suffixes.map((value) => value.trim()).filter(Boolean),
-    },
   };
 }
 

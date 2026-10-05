@@ -80,7 +80,6 @@ export interface ProviderResourceFlags {
   cloakEnabled?: boolean;
   claudeCodeCliProfile?: boolean;
   websockets?: boolean;
-  allowPrivateInstructions?: boolean;
   protocols?: string[];
 }
 
@@ -204,8 +203,6 @@ export interface ProviderEntryFormInput {
 
   /** Codex 专属 */
   websockets?: boolean;
-  /** Codex 专属: private instructions / jailbreak */
-  allowPrivateInstructions?: boolean;
   /** Claude 专属 */
   cloak?: CloakInput;
   fingerprintProfile?: string;

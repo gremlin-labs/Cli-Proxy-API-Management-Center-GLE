@@ -54,8 +54,6 @@ export interface ProviderKeyConfig {
   models?: ModelAlias[];
   excludedModels?: string[];
   disableCooling?: boolean;
-  /** Codex only: allow private instruction injection on this API-key credential. */
-  allowPrivateInstructions?: boolean;
   cloak?: CloakConfig;
   fingerprintProfile?: string;
   authIndex?: string;

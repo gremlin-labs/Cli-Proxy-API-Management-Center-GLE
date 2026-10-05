@@ -63,7 +63,6 @@ export type UseAuthFilesDataResult = {
   batchResetCooldown: (files: AuthFileItem[]) => void;
   batchSetPriority: (names: string[], priority: number) => Promise<void>;
   batchSetWeight: (names: string[], weight: number) => Promise<void>;
-  batchSetJailbreak: (names: string[], allow: boolean) => Promise<void>;
 };
 
 export type UseAuthFilesDataOptions = {
@@ -941,79 +940,6 @@ export function useAuthFilesData({
     [files, loadFiles, showNotification, t]
   );
 
-  const batchSetJailbreak = useCallback(
-    async (names: string[], allow: boolean) => {
-      if (batchFieldsPendingRef.current) return;
-
-      const requestedNames = new Set(names.map((name) => name.trim()).filter(Boolean));
-      if (requestedNames.size === 0) return;
-      // allow_private_instructions is a Codex-only gate; skip other providers.
-      const targetNames = files
-        .filter(
-          (file) =>
-            requestedNames.has(file.name) &&
-            !isRuntimeOnlyAuthFile(file) &&
-            normalizeProviderKey(String(file.type ?? file.provider ?? '')) === 'codex'
-        )
-        .map((file) => file.name);
-      if (targetNames.length === 0) return;
-
-      batchFieldsPendingRef.current = true;
-      setBatchFieldsSaving(true);
-      try {
-        const results = await Promise.allSettled(
-          targetNames.map((name) =>
-            authFilesApi.patchFields(name, { allow_private_instructions: allow })
-          )
-        );
-
-        let successCount = 0;
-        let failCount = 0;
-        const succeededNames = new Set<string>();
-        results.forEach((result, index) => {
-          if (result.status === 'fulfilled') {
-            successCount += 1;
-            succeededNames.add(targetNames[index]);
-          } else {
-            failCount += 1;
-          }
-        });
-
-        if (successCount > 0) {
-          setFiles((prev) =>
-            prev.map((file) =>
-              succeededNames.has(file.name) ? { ...file, allow_private_instructions: allow } : file
-            )
-          );
-          notifyAuthFilesChanged();
-        }
-
-        if (failCount === 0) {
-          showNotification(
-            allow
-              ? t('auth_files.batch_jailbreak_enable_success', { count: successCount })
-              : t('auth_files.batch_jailbreak_disable_success', { count: successCount }),
-            'success'
-          );
-        } else {
-          showNotification(
-            t('auth_files.batch_jailbreak_partial', { success: successCount, failed: failCount }),
-            'warning'
-          );
-        }
-
-        await loadFiles({ silent: true });
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : '';
-        showNotification(`${t('notification.update_failed')}: ${message}`, 'error');
-      } finally {
-        batchFieldsPendingRef.current = false;
-        setBatchFieldsSaving(false);
-      }
-    },
-    [files, loadFiles, showNotification, t]
-  );
-
   const batchDownload = useCallback(
     async (names: string[]) => {
       const uniqueNames = Array.from(new Set(names));
@@ -1127,6 +1053,5 @@ export function useAuthFilesData({
     batchResetCooldown,
     batchSetPriority,
     batchSetWeight,
-    batchSetJailbreak,
   };
 }

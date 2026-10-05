@@ -27,7 +27,7 @@ export interface Config {
   interactionsApiKeys?: GeminiKeyConfig[];
   codexApiKeys?: ProviderKeyConfig[];
   metaApiKeys?: ProviderKeyConfig[];
-  /** Command Code reuses the Codex credential shape (no websockets / private instructions). */
+  /** Command Code reuses the Codex credential shape (no websockets). */
   commandcodeApiKeys?: ProviderKeyConfig[];
   xaiApiKeys?: ProviderKeyConfig[];
   claudeApiKeys?: ProviderKeyConfig[];
@@ -39,11 +39,6 @@ export interface Config {
 
 export type CodexInstructionsMode = 'prepend' | 'append' | 'replace';
 
-export interface CodexInstructionMarkersConfig {
-  prefixes: string[];
-  suffixes: string[];
-}
-
 export interface CodexInstructionsConfig {
   enabled: boolean;
   mode: CodexInstructionsMode;
@@ -51,10 +46,6 @@ export interface CodexInstructionsConfig {
   file: string;
   models: string[];
   oauthOnly: boolean;
-  requireAuthAllow: boolean;
-  reserveMarkedAuths: boolean;
-  usePrefixSuffix: boolean;
-  requestMarkers: CodexInstructionMarkersConfig;
 }
 
 export interface RawCodexInstructionsConfig {
@@ -65,20 +56,6 @@ export interface RawCodexInstructionsConfig {
   models?: string[];
   'oauth-only'?: boolean;
   oauthOnly?: boolean;
-  'require-auth-allow'?: boolean;
-  requireAuthAllow?: boolean;
-  'reserve-marked-auths'?: boolean;
-  reserveMarkedAuths?: boolean;
-  'use-prefix-suffix'?: boolean;
-  usePrefixSuffix?: boolean;
-  'request-markers'?: {
-    prefixes?: string[];
-    suffixes?: string[];
-  };
-  requestMarkers?: {
-    prefixes?: string[];
-    suffixes?: string[];
-  };
 }
 
 export interface QoderConfig {

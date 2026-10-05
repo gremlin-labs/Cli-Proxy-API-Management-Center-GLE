@@ -37,7 +37,7 @@ describe('fork upstream sync contracts', () => {
   });
   test('model discovery preserves distinct existing aliases and adds each new name once', () => {
     const existing = [
-      { name: 'model', alias: 'private/model' },
+      { name: 'model', alias: 'team/model' },
       { name: 'model', alias: 'public/model' },
     ];
     const merged = mergeDiscoveredModels(existing, [

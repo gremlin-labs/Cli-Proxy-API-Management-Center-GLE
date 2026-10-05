@@ -173,18 +173,6 @@ export function AuthFilesPrefixProxyEditorModal(props: AuthFilesPrefixProxyEdito
                         <FieldHint hint={t('auth_files.websockets_hint')} />
                       </div>
                     )}
-                    {editor.providerKey === 'codex' && (
-                      <div className={styles.prefixProxySwitch}>
-                        <ToggleSwitch
-                          checked={editor.allowPrivateInstructions}
-                          onChange={(checked) => onChange('allowPrivateInstructions', checked)}
-                          disabled={disableControls || editor.saving}
-                          label={t('auth_files.allow_private_instructions_label')}
-                          ariaLabel={t('auth_files.allow_private_instructions_label')}
-                        />
-                        <FieldHint hint={t('auth_files.allow_private_instructions_hint')} />
-                      </div>
-                    )}
                     {supportsAuthFileUsingApi(editor.providerKey) && (
                       <div className={styles.prefixProxySwitch}>
                         <ToggleSwitch

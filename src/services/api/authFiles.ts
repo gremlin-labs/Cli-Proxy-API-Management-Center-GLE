@@ -24,7 +24,6 @@ export type AuthFileFieldsPatch = {
   note?: string;
   excluded_models?: string[];
   'excluded-models'?: string[];
-  allow_private_instructions?: boolean;
   plan_type?: string;
   chatgpt_plan_type?: string;
   plan_checked_at?: string;

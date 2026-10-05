@@ -42,7 +42,6 @@ export type PrefixProxyEditorField =
   | 'usingApi'
   | 'note'
   | 'excludedModelsText'
-  | 'allowPrivateInstructions'
   | 'headersText';
 
 export type PrefixProxyEditorFieldValue = string | boolean;
@@ -73,8 +72,6 @@ export type PrefixProxyEditorState = {
   noteTouched: boolean;
   excludedModelsText: string;
   excludedModelsTouched: boolean;
-  allowPrivateInstructions: boolean;
-  allowPrivateInstructionsTouched: boolean;
   headersText: string;
   headersTouched: boolean;
   headersError: string | null;
@@ -349,14 +346,6 @@ export const buildAuthFileFieldsPatch = (
     }
   }
 
-  if (editor.allowPrivateInstructionsTouched && editor.providerKey === 'codex') {
-    const originalAllow = Boolean(original.allow_private_instructions);
-    const nextAllow = Boolean(editor.allowPrivateInstructions);
-    if (nextAllow !== originalAllow) {
-      patch.allow_private_instructions = nextAllow;
-    }
-  }
-
   if (supportsAuthFileWebsockets(editor.providerKey) && editor.websocketsTouched) {
     const originalWebsockets = readAuthFileWebsockets(original);
     const nextWebsockets = Boolean(editor.websockets);
@@ -446,14 +435,6 @@ const buildPrefixProxyUpdatedText = (
     next['excluded-models'] = patch['excluded-models'];
   }
 
-  if (patch.allow_private_instructions !== undefined) {
-    if (patch.allow_private_instructions) {
-      next.allow_private_instructions = true;
-    } else {
-      delete next.allow_private_instructions;
-    }
-  }
-
   applyHeadersPatch(next, patch.headers);
 
   if (patch.websockets !== undefined) {
@@ -532,8 +513,6 @@ export function useAuthFilesPrefixProxyEditor(
       noteTouched: false,
       excludedModelsText: '',
       excludedModelsTouched: false,
-      allowPrivateInstructions: false,
-      allowPrivateInstructionsTouched: false,
       headersText: '',
       headersTouched: false,
       headersError: null,
@@ -584,7 +563,6 @@ export function useAuthFilesPrefixProxyEditor(
       const usingApi = supportsAuthFileUsingApi(providerKey) ? readAuthFileUsingApi(json) : false;
       const note = typeof json.note === 'string' ? json.note : '';
       const excludedModelsText = readExcludedModels(json).join('\n');
-      const allowPrivateInstructions = Boolean(json.allow_private_instructions);
       const headers = json.headers;
       let headersText = '';
       let headersError: string | null = null;
@@ -619,8 +597,6 @@ export function useAuthFilesPrefixProxyEditor(
           noteTouched: false,
           excludedModelsText,
           excludedModelsTouched: false,
-          allowPrivateInstructions,
-          allowPrivateInstructionsTouched: false,
           headersText,
           headersTouched: false,
           headersError,
@@ -674,13 +650,6 @@ export function useAuthFilesPrefixProxyEditor(
           ...prev,
           excludedModelsText: String(value),
           excludedModelsTouched: true,
-        };
-      }
-      if (field === 'allowPrivateInstructions') {
-        return {
-          ...prev,
-          allowPrivateInstructions: Boolean(value),
-          allowPrivateInstructionsTouched: true,
         };
       }
       if (field === 'headersText') {
