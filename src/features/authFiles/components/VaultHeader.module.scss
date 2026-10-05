@@ -38,16 +38,6 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   color: var(--text-secondary);
-
-  /* 终端游标承接 eyebrow 退场后的结构记号，与下方谱条的绿色竖条同语汇 */
-  &::before {
-    content: '▍';
-    color: var(--viz-success);
-    font-size: 13px;
-    line-height: 1;
-    align-self: center;
-    margin-right: 1px;
-  }
 }
 
 .metaDot {

@@ -463,7 +463,6 @@
   gap: 6px;
 }
 
-/* 终端光标前缀是全页的结构记号 */
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -473,14 +472,8 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
-
-  &::before {
-    content: '▍';
-    color: var(--viz-success);
-    font-size: 12px;
-    line-height: 1;
-  }
+  // Accent-colored label, no leading bar glyph.
+  color: var(--primary-color);
 }
 
 .sectionTitle {

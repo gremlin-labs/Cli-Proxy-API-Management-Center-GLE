@@ -976,8 +976,6 @@ export function MainLayout() {
         isPluginResourcePage ? 'plugin-resource-shell' : ''
       }`}
     >
-      <div className="top-gradient-blur" aria-hidden="true" />
-
       <header className="main-header" ref={headerRef}>
         <button
           type="button"
