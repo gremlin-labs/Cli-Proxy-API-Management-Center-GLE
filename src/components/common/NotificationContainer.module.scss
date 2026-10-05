@@ -1,21 +1,32 @@
+@use '../../styles/mixins' as *;
+
+// Toasts stack in the bottom-right corner, clear of the floating header controls.
 .container {
   position: fixed;
   z-index: $z-notification;
-  top: max(1rem, env(safe-area-inset-top));
-  inset-inline: 0;
-  max-height: calc(100dvh - max(1rem, env(safe-area-inset-top)) - 1rem);
-  margin-inline: auto;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  max-width: min(26rem, calc(100vw - 2rem));
+  max-height: calc(
+    100dvh - max(1rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom))
+  );
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: flex-end;
   gap: 0.5rem;
-  padding: 0.25rem max(1rem, env(safe-area-inset-right)) 1.5rem max(1rem, env(safe-area-inset-left));
   overflow-y: auto;
   scrollbar-width: thin;
   pointer-events: none;
 
   &:empty {
     display: none;
+  }
+
+  @include mobile {
+    left: max(1rem, env(safe-area-inset-left));
+    max-width: none;
+    align-items: center;
   }
 }
 
@@ -45,12 +56,12 @@
 
   @starting-style {
     opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+    transform: translateY(8px) scale(0.98);
   }
 
   &[data-exiting] {
     opacity: 0;
-    transform: translateY(-6px) scale(0.98);
+    transform: translateY(6px) scale(0.98);
     transition-duration: 160ms;
     pointer-events: none;
   }
