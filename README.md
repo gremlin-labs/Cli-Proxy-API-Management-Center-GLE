@@ -15,7 +15,7 @@ Manage providers, credentials, quotas, and logs — from a single HTML file.
 
 **English** · [简体中文](README_CN.md)
 
-[Get started](#quick-start) · [Features](#features) · [Development](#development) · [Releases](https://github.com/router-for-me/Cli-Proxy-API-Management-Center/releases)
+[Get started](#quick-start) · [Features](#features) · [Development](#development) · [Releases](https://github.com/gremlin-labs/Cli-Proxy-API-Management-Center/releases)
 
 </div>
 
@@ -105,7 +105,7 @@ Use `bun run preview` to preview locally. Prefer an HTTP server over opening the
 <details>
 <summary><strong>Release details</strong></summary>
 
-- Tags matching `vX.Y.Z` trigger [the release workflow](.github/workflows/release.yml).
+- In the gremlinlabs fork GitHub Actions are disabled, so releases are published locally with `scripts/release.sh vX.Y.Z-gremlinlabs.N` from a clean, pushed `main`. It runs `bun run verify`, builds with that version, tags the commit, and creates a GitHub release with `management.html` attached, which is what CLIProxyAPI's panel updater downloads.
 - The UI version is injected at build time from `VERSION`, then git tags, then the package version, with `dev` as the final fallback.
 - Hash routing and an ES2020 build target keep deployment simple.
 
