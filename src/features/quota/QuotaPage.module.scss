@@ -51,7 +51,7 @@
   align-items: center;
   flex: 0 1 340px;
   min-width: 0;
-  height: 36px;
+  height: $control-height-md;
   border: 1px solid transparent;
   border-radius: 10px;
   background: var(--bg-secondary);
@@ -125,7 +125,7 @@
   max-width: 100%;
 
   button[aria-haspopup='listbox'] {
-    height: 36px;
+    height: $control-height-md;
     border-color: transparent;
     border-radius: 10px;
     background: transparent;

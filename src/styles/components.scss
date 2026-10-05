@@ -144,6 +144,11 @@ textarea {
   padding: 8px 10px;
 }
 
+// Leave room for an inline trailing icon or button (Input rightElement).
+.input.input-has-right {
+  padding-right: 32px;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

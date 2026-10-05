@@ -37,7 +37,7 @@ export function Input({
       <div style={{ position: 'relative' }}>
         <input
           id={inputId}
-          className={`input ${className}`.trim()}
+          className={`input ${rightElement ? 'input-has-right ' : ''}${className}`.trim()}
           aria-invalid={Boolean(error) || rest['aria-invalid']}
           aria-describedby={describedBy}
           {...rest}

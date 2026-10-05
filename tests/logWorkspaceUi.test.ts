@@ -81,7 +81,7 @@ describe('log workspace layout contract', () => {
     expect(styles).toMatch(
       /\.searchInput:global\(\.input\),\s*\.levelSelect > button,\s*\.filterPanelToggle:global\(\.btn\),\s*\.actionButton:global\(\.btn\) \{[^}]*height: var\(--log-control-height\)/
     );
-    expect(styles).toContain('--log-control-height: 40px');
+    expect(styles).toContain('--log-control-height: #{$control-height-md}');
     expect(styles).toContain('--log-control-height: 36px');
     expect(styles).toContain('width: var(--log-control-height)');
     expect(styles).not.toContain('height: 32px');

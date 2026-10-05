@@ -22,7 +22,7 @@
   }
 
   :global(.input) {
-    height: 36px;
+    height: $control-height-md;
     border-radius: 10px;
     font-size: 13px;
   }
