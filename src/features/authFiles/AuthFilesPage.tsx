@@ -35,7 +35,7 @@ import { ProviderTabs } from '@/features/authFiles/components/ProviderTabs';
 import { VaultHeader } from '@/features/authFiles/components/VaultHeader';
 import { VaultPulse } from '@/features/authFiles/components/VaultPulse';
 import { invalidateAuthFileDerivedCaches } from '@/features/authFiles/cacheInvalidation';
-import { isCoolingAuthFile } from '@/features/authFiles/cooldowns';
+import { hasResettableCooldown, isCoolingAuthFile } from '@/features/authFiles/cooldowns';
 import {
   buildWildcardSearch,
   matchesAuthFileSearch,
@@ -153,6 +153,7 @@ export function AuthFilesPage() {
     deselectAll,
     batchDownload,
     batchSetStatus,
+    batchCooldownReset,
     batchDelete,
   } = useAuthFilesData({ onFilesMutated: invalidateDerivedCaches });
 
@@ -473,6 +474,11 @@ export function AuthFilesPage() {
     [sorted]
   );
   const selectedNames = useMemo(() => Array.from(selectedFiles), [selectedFiles]);
+  const selectedCooldownResetCount = useMemo(
+    () =>
+      files.filter((file) => selectedFiles.has(file.name) && hasResettableCooldown(file)).length,
+    [files, selectedFiles]
+  );
   const selectedHasStatusUpdating = useMemo(
     () =>
       files.some(
@@ -844,6 +850,8 @@ export function AuthFilesPage() {
         onDownload={() => void batchDownload(selectedNames)}
         onEnable={() => batchSetStatus(selectedNames, true)}
         onDisable={() => batchSetStatus(selectedNames, false)}
+        cooldownResetCount={selectedCooldownResetCount}
+        onResetCooldowns={() => batchCooldownReset(selectedNames)}
         onDelete={() => batchDelete(selectedNames)}
       />
     </div>

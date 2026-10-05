@@ -435,7 +435,12 @@
     "quota_refresh_success": "Quota refreshed for \"{{name}}\"",
     "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}",
     "clear_filters_button": "Clear filters",
-    "problem_filter_cooling": "Cooling"
+    "problem_filter_cooling": "Cooling",
+    "batch_cooldown_reset": "Clear cooldowns ({{count}})",
+    "batch_cooldown_reset_title": "Clear cooldowns?",
+    "batch_cooldown_reset_confirm": "Clear the local routing cooldown for {{count}} selected credentials? They may become eligible for requests immediately. This does not restore upstream quota.",
+    "batch_cooldown_reset_success": "Cleared cooldowns for {{count}} credentials.",
+    "batch_cooldown_reset_partial": "Cleared {{success}} cooldowns; {{failed}} failed."
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",

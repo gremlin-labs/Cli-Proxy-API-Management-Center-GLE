@@ -438,7 +438,12 @@
     "quota_refresh_success": "Квота для \"{{name}}\" обновлена",
     "quota_refresh_failed": "Не удалось обновить квоту для \"{{name}}\": {{message}}",
     "clear_filters_button": "Сбросить фильтры",
-    "problem_filter_cooling": "Охлаждение"
+    "problem_filter_cooling": "Охлаждение",
+    "batch_cooldown_reset": "Сбросить охлаждение ({{count}})",
+    "batch_cooldown_reset_title": "Сбросить охлаждение?",
+    "batch_cooldown_reset_confirm": "Сбросить локальное охлаждение маршрутизации для выбранных учётных данных ({{count}})? Они могут сразу снова получать запросы. Квота у провайдера при этом не восстанавливается.",
+    "batch_cooldown_reset_success": "Охлаждение сброшено для {{count}} учётных данных.",
+    "batch_cooldown_reset_partial": "Сброшено: {{success}}; ошибок: {{failed}}."
   },
   "antigravity_subscription": {
     "plan_unknown": "Неизвестно",

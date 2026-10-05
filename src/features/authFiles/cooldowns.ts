@@ -55,3 +55,10 @@ export function isCoolingAuthFile(file: AuthFileItem, nowMs: number): boolean {
   }
   return file.unavailable === true;
 }
+
+/** Matches the per-card reset rule: an addressable credential with reported cooldown rows. */
+export function hasResettableCooldown(file: AuthFileItem): boolean {
+  return (
+    String(file.authIndex ?? '').trim() !== '' && Boolean(file.cooldownSnapshot?.records?.length)
+  );
+}

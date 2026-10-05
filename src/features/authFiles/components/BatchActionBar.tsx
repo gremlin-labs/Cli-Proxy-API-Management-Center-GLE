@@ -25,6 +25,9 @@ export type BatchActionBarProps = {
   onDownload: () => void;
   onEnable: () => void;
   onDisable: () => void;
+  /** Selected credentials with a resettable cooldown; the action shows only when > 0. */
+  cooldownResetCount?: number;
+  onResetCooldowns?: () => void;
   onDelete: () => void;
 };
 
@@ -48,6 +51,8 @@ export function BatchActionBar(props: BatchActionBarProps) {
     onDownload,
     onEnable,
     onDisable,
+    cooldownResetCount = 0,
+    onResetCooldowns,
     onDelete,
   } = props;
   const { t } = useTranslation();
@@ -197,6 +202,16 @@ export function BatchActionBar(props: BatchActionBarProps) {
           <Button variant="secondary" size="sm" onClick={onDisable} disabled={batchStatusDisabled}>
             {t('auth_files.batch_disable')}
           </Button>
+          {onResetCooldowns && cooldownResetCount > 0 ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onResetCooldowns}
+              disabled={disableControls}
+            >
+              {t('auth_files.batch_cooldown_reset', { count: cooldownResetCount })}
+            </Button>
+          ) : null}
           <Button
             variant="danger"
             size="sm"

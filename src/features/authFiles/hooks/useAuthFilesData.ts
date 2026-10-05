@@ -4,6 +4,7 @@ import { apiClient, authFilesApi } from '@/services/api';
 import type { AuthFileRefreshResult } from '@/services/api/authFiles';
 import { getAuthFileRefreshKey } from '@/features/authFiles/manualRefresh';
 import { notifyAuthFilesChanged } from '@/features/authFiles/authFilesEvents';
+import { hasResettableCooldown } from '@/features/authFiles/cooldowns';
 import { useNotificationStore } from '@/stores';
 import type { AuthFileItem } from '@/types';
 import { formatFileSize } from '@/utils/format';
@@ -65,6 +66,7 @@ export type UseAuthFilesDataResult = {
   handleDownload: (name: string) => Promise<void>;
   handleManualRefresh: (item: AuthFileItem) => Promise<void>;
   handleCooldownReset: (item: AuthFileItem) => void;
+  batchCooldownReset: (names: string[]) => void;
   handleStatusToggle: (item: AuthFileItem, enabled: boolean) => Promise<void>;
   toggleSelect: (name: string) => void;
   selectAllVisible: (visibleFiles: AuthFileItem[]) => void;
@@ -675,6 +677,94 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
     [invalidateInFlightLoads, loadFiles, showConfirmation, showNotification, t]
   );
 
+  // Batch form of handleCooldownReset: one confirmation, one request per credential.
+  const batchCooldownReset = useCallback(
+    (names: string[]) => {
+      const uniqueNames = new Set(names);
+      const targets = files.filter(
+        (file) =>
+          uniqueNames.has(file.name) &&
+          hasResettableCooldown(file) &&
+          !cooldownResetPendingRef.current.has(String(file.authIndex).trim())
+      );
+      if (targets.length === 0) return;
+
+      const connectionRevision = apiClient.getConnectionRevision();
+      showConfirmation({
+        title: t('auth_files.batch_cooldown_reset_title'),
+        message: t('auth_files.batch_cooldown_reset_confirm', { count: targets.length }),
+        confirmText: t('auth_files.cooldown_reset_button'),
+        variant: 'primary',
+        onConfirm: async () => {
+          if (connectionRevision !== apiClient.getConnectionRevision()) return;
+          const authIndexes = targets
+            .map((file) => String(file.authIndex).trim())
+            .filter((authIndex) => !cooldownResetPendingRef.current.has(authIndex));
+          if (authIndexes.length === 0) return;
+          authIndexes.forEach((authIndex) => cooldownResetPendingRef.current.add(authIndex));
+          setCooldownResetting((prev) => {
+            const next = { ...prev };
+            authIndexes.forEach((authIndex) => {
+              next[authIndex] = true;
+            });
+            return next;
+          });
+
+          try {
+            const results = await Promise.allSettled(
+              authIndexes.map((authIndex) => authFilesApi.resetCooldown(authIndex))
+            );
+            if (connectionRevision !== apiClient.getConnectionRevision()) return;
+            const cleared = new Set(
+              authIndexes.filter((_, index) => results[index].status === 'fulfilled')
+            );
+            const failed = authIndexes.length - cleared.size;
+            invalidateInFlightLoads();
+            setFiles((prev) =>
+              prev.map((file) =>
+                cleared.has(String(file.authIndex ?? '').trim()) && file.cooldownSnapshot
+                  ? {
+                      ...file,
+                      cooldownSnapshot: {
+                        ...file.cooldownSnapshot,
+                        receivedAtMs: Date.now(),
+                        records: [],
+                      },
+                    }
+                  : file
+              )
+            );
+            if (failed === 0) {
+              showNotification(
+                t('auth_files.batch_cooldown_reset_success', { count: cleared.size }),
+                'success'
+              );
+            } else {
+              showNotification(
+                t('auth_files.batch_cooldown_reset_partial', {
+                  success: cleared.size,
+                  failed,
+                }),
+                cleared.size > 0 ? 'warning' : 'error'
+              );
+            }
+            await loadFiles({ background: true });
+          } finally {
+            authIndexes.forEach((authIndex) => cooldownResetPendingRef.current.delete(authIndex));
+            setCooldownResetting((prev) => {
+              const next = { ...prev };
+              authIndexes.forEach((authIndex) => {
+                delete next[authIndex];
+              });
+              return next;
+            });
+          }
+        },
+      });
+    },
+    [files, invalidateInFlightLoads, loadFiles, showConfirmation, showNotification, t]
+  );
+
   const handleStatusToggle = useCallback(
     async (item: AuthFileItem, enabled: boolean) => {
       const revision = apiClient.getConnectionRevision();
@@ -969,6 +1059,7 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
     handleDownload,
     handleManualRefresh,
     handleCooldownReset,
+    batchCooldownReset,
     handleStatusToggle,
     toggleSelect,
     selectAllVisible,

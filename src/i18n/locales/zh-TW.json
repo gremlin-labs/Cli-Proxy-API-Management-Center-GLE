@@ -433,7 +433,12 @@
     "quota_refresh_success": "已重新整理「{{name}}」的配額",
     "quota_refresh_failed": "重新整理「{{name}}」的配額失敗：{{message}}",
     "clear_filters_button": "清除篩選",
-    "problem_filter_cooling": "冷卻中"
+    "problem_filter_cooling": "冷卻中",
+    "batch_cooldown_reset": "清除冷卻（{{count}}）",
+    "batch_cooldown_reset_title": "清除冷卻？",
+    "batch_cooldown_reset_confirm": "清除所選 {{count}} 個憑證的本機路由冷卻？它們可能會立即重新參與請求。此操作不會恢復上游額度。",
+    "batch_cooldown_reset_success": "已清除 {{count}} 個憑證的冷卻。",
+    "batch_cooldown_reset_partial": "已清除 {{success}} 個冷卻，{{failed}} 個失敗。"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",

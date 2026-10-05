@@ -433,7 +433,12 @@
     "quota_refresh_success": "已刷新 \"{{name}}\" 的额度",
     "quota_refresh_failed": "刷新 \"{{name}}\" 的额度失败：{{message}}",
     "clear_filters_button": "清除筛选",
-    "problem_filter_cooling": "冷却中"
+    "problem_filter_cooling": "冷却中",
+    "batch_cooldown_reset": "清除冷却（{{count}}）",
+    "batch_cooldown_reset_title": "清除冷却？",
+    "batch_cooldown_reset_confirm": "清除所选 {{count}} 个凭证的本地路由冷却？它们可能会立即重新参与请求。此操作不会恢复上游额度。",
+    "batch_cooldown_reset_success": "已清除 {{count}} 个凭证的冷却。",
+    "batch_cooldown_reset_partial": "已清除 {{success}} 个冷却，{{failed}} 个失败。"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",
