@@ -86,6 +86,77 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  > :global(.form-group),
+  > .fieldRow > :global(.form-group) {
+    margin-bottom: 0;
+  }
+}
+
+/* Two related short fields share a row; stacks on narrow sheets. */
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  border-radius: $radius-md;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+
+  & + & {
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+.toggleText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  :global(.hint) {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+  }
+}
+
+.toggleLabel {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--text-primary);
+}
+
+.rawBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  > summary {
+    cursor: pointer;
+    list-style-position: inside;
+    padding: 2px 0;
+  }
+
+  &[open] > summary {
+    margin-bottom: 6px;
+  }
 }
 
 .settingsLink {

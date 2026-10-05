@@ -174,104 +174,122 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
           ) : (
             <>
               {editor.error && <div className={styles.error}>{editor.error}</div>}
-              <div className={styles.jsonWrapper}>
-                <label className={styles.label}>{t('auth_files.prefix_proxy_info_label')}</label>
-                <textarea className={styles.textarea} rows={8} readOnly value={displayInfoText} />
-              </div>
-              <div className={styles.jsonWrapper}>
-                <label className={styles.label}>
-                  {editor.json
-                    ? t('auth_files.prefix_proxy_source_label')
-                    : t('auth_files.prefix_proxy_invalid_content_label')}
-                </label>
-                {editor.json ? (
-                  <textarea className={styles.textarea} rows={10} readOnly value={previewText} />
-                ) : (
+              {!editor.json && (
+                <div className={styles.jsonWrapper}>
+                  <label className={styles.label}>
+                    {t('auth_files.prefix_proxy_invalid_content_label')}
+                  </label>
                   <pre className={styles.invalidPreview}>{invalidContentPreview}</pre>
-                )}
-              </div>
+                </div>
+              )}
               {editor.json && (
                 <div className={styles.fields}>
                   <Input
-                    label={t('auth_files.prefix_label')}
-                    value={editor.prefix}
+                    label={t('auth_files.note_label')}
+                    value={editor.note}
+                    placeholder={t('auth_files.note_placeholder')}
+                    hint={t('auth_files.note_hint')}
                     disabled={disableControls || editor.saving || !editor.json}
-                    onChange={(e) => onChange('prefix', e.target.value)}
+                    onChange={(e) => onChange('note', e.target.value)}
                   />
-                  <Input
-                    label={t('auth_files.proxy_url_label')}
-                    value={editor.proxyUrl}
-                    placeholder={t('auth_files.proxy_url_placeholder')}
-                    disabled={disableControls || editor.saving || !editor.json}
-                    onChange={(e) => onChange('proxyUrl', e.target.value)}
-                  />
-                  <Input
-                    label={t('auth_files.priority_label')}
-                    value={editor.priority}
-                    placeholder={t('auth_files.priority_placeholder')}
-                    hint={t('auth_files.priority_hint')}
-                    disabled={disableControls || editor.saving || !editor.json}
-                    onChange={(e) => onChange('priority', e.target.value)}
-                  />
-                  <Input
-                    label={t('auth_files.weight_label')}
-                    type="number"
-                    step="1"
-                    max={MAX_CREDENTIAL_WEIGHT}
-                    value={editor.weight}
-                    placeholder="1"
-                    hint={
-                      <Trans
-                        i18nKey="auth_files.weight_hint"
-                        components={{
-                          settingsLink: (
-                            <Link
-                              className={styles.settingsLink}
-                              to="/config?field=routingStrategy"
-                              onClick={handleSettingsLinkClick}
-                            />
-                          ),
-                        }}
-                      />
-                    }
-                    error={editor.weightError ?? undefined}
-                    disabled={disableControls || editor.saving || !editor.json}
-                    onChange={(e) => onChange('weight', e.target.value)}
-                  />
-                  <div className="form-group">
-                    <label>{t('auth_files.disable_cooling_label')}</label>
-                    <ToggleSwitch
-                      checked={editor.disableCooling}
-                      onChange={(value) => onChange('disableCooling', value)}
+                  <div className={styles.fieldRow}>
+                    <Input
+                      label={t('auth_files.prefix_label')}
+                      value={editor.prefix}
                       disabled={disableControls || editor.saving || !editor.json}
-                      ariaLabel={t('auth_files.disable_cooling_label')}
+                      onChange={(e) => onChange('prefix', e.target.value)}
                     />
-                    <div className="hint">{t('auth_files.disable_cooling_hint')}</div>
+                    <Input
+                      label={t('auth_files.proxy_url_label')}
+                      value={editor.proxyUrl}
+                      placeholder={t('auth_files.proxy_url_placeholder')}
+                      disabled={disableControls || editor.saving || !editor.json}
+                      onChange={(e) => onChange('proxyUrl', e.target.value)}
+                    />
                   </div>
-                  {supportsAuthFileWebsockets(editor.providerKey) && (
-                    <div className="form-group">
-                      <label>{t('auth_files.websockets_label')}</label>
+                  <div className={styles.fieldRow}>
+                    <Input
+                      label={t('auth_files.priority_label')}
+                      value={editor.priority}
+                      placeholder={t('auth_files.priority_placeholder')}
+                      hint={t('auth_files.priority_hint')}
+                      disabled={disableControls || editor.saving || !editor.json}
+                      onChange={(e) => onChange('priority', e.target.value)}
+                    />
+                    <Input
+                      label={t('auth_files.weight_label')}
+                      type="number"
+                      step="1"
+                      max={MAX_CREDENTIAL_WEIGHT}
+                      value={editor.weight}
+                      placeholder="1"
+                      hint={
+                        <Trans
+                          i18nKey="auth_files.weight_hint"
+                          components={{
+                            settingsLink: (
+                              <Link
+                                className={styles.settingsLink}
+                                to="/config?field=routingStrategy"
+                                onClick={handleSettingsLinkClick}
+                              />
+                            ),
+                          }}
+                        />
+                      }
+                      error={editor.weightError ?? undefined}
+                      disabled={disableControls || editor.saving || !editor.json}
+                      onChange={(e) => onChange('weight', e.target.value)}
+                    />
+                  </div>
+                  <div className={styles.toggleList}>
+                    <div className={styles.toggleRow}>
+                      <div className={styles.toggleText}>
+                        <span className={styles.toggleLabel}>
+                          {t('auth_files.disable_cooling_label')}
+                        </span>
+                        <span className="hint">{t('auth_files.disable_cooling_hint')}</span>
+                      </div>
                       <ToggleSwitch
-                        checked={editor.websockets}
-                        onChange={(value) => onChange('websockets', value)}
+                        checked={editor.disableCooling}
+                        onChange={(value) => onChange('disableCooling', value)}
                         disabled={disableControls || editor.saving || !editor.json}
-                        ariaLabel={t('auth_files.websockets_label')}
+                        ariaLabel={t('auth_files.disable_cooling_label')}
                       />
-                      <div className="hint">{t('auth_files.websockets_hint')}</div>
                     </div>
-                  )}
-                  {supportsAuthFileUsingApi(editor.providerKey) && (
-                    <div className="form-group">
-                      <label>{t('auth_files.using_api_label')}</label>
-                      <ToggleSwitch
-                        checked={editor.usingApi}
-                        onChange={(value) => onChange('usingApi', value)}
-                        disabled={disableControls || editor.saving || !editor.json}
-                        ariaLabel={t('auth_files.using_api_label')}
-                      />
-                      <div className="hint">{t('auth_files.using_api_hint')}</div>
-                    </div>
-                  )}
+                    {supportsAuthFileWebsockets(editor.providerKey) && (
+                      <div className={styles.toggleRow}>
+                        <div className={styles.toggleText}>
+                          <span className={styles.toggleLabel}>
+                            {t('auth_files.websockets_label')}
+                          </span>
+                          <span className="hint">{t('auth_files.websockets_hint')}</span>
+                        </div>
+                        <ToggleSwitch
+                          checked={editor.websockets}
+                          onChange={(value) => onChange('websockets', value)}
+                          disabled={disableControls || editor.saving || !editor.json}
+                          ariaLabel={t('auth_files.websockets_label')}
+                        />
+                      </div>
+                    )}
+                    {supportsAuthFileUsingApi(editor.providerKey) && (
+                      <div className={styles.toggleRow}>
+                        <div className={styles.toggleText}>
+                          <span className={styles.toggleLabel}>
+                            {t('auth_files.using_api_label')}
+                          </span>
+                          <span className="hint">{t('auth_files.using_api_hint')}</span>
+                        </div>
+                        <ToggleSwitch
+                          checked={editor.usingApi}
+                          onChange={(value) => onChange('usingApi', value)}
+                          disabled={disableControls || editor.saving || !editor.json}
+                          ariaLabel={t('auth_files.using_api_label')}
+                        />
+                      </div>
+                    )}
+                  </div>
                   <AuthFileExcludedModelsField
                     fileName={editor.fileName}
                     value={editor.excludedModelsText}
@@ -297,15 +315,22 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                     disabled={disableControls || editor.saving}
                     onChange={onChange}
                   />
-                  <Input
-                    label={t('auth_files.note_label')}
-                    value={editor.note}
-                    placeholder={t('auth_files.note_placeholder')}
-                    hint={t('auth_files.note_hint')}
-                    disabled={disableControls || editor.saving || !editor.json}
-                    onChange={(e) => onChange('note', e.target.value)}
-                  />
                 </div>
+              )}
+              {/* Raw data is collapsed by default: it is long and contains the credential's tokens. */}
+              <details className={styles.rawBlock}>
+                <summary className={styles.label}>
+                  {t('auth_files.prefix_proxy_info_label')}
+                </summary>
+                <textarea className={styles.textarea} rows={8} readOnly value={displayInfoText} />
+              </details>
+              {editor.json && (
+                <details className={styles.rawBlock}>
+                  <summary className={styles.label}>
+                    {t('auth_files.prefix_proxy_source_label')}
+                  </summary>
+                  <textarea className={styles.textarea} rows={10} readOnly value={previewText} />
+                </details>
               )}
             </>
           )}
