@@ -32,3 +32,19 @@ export function resolvePlanTier(planType: string | null | undefined): CodexPlanT
   if (PREMIUM_CODEX_PLAN_TYPES.has(normalized)) return 'premium';
   return 'plain';
 }
+
+/**
+ * i18n key for a Codex plan label, or null for an unknown plan (callers show the raw
+ * value). Shared by the quota view and the auth file card so labels never drift.
+ */
+export function codexPlanLabelKey(planType: string | null | undefined): string | null {
+  const normalized = normalizePlanType(planType);
+  if (!normalized) return null;
+  if (normalized === 'self_serve_business_prolite') return 'codex_quota.plan_business_premium';
+  if (normalized === 'pro') return 'codex_quota.plan_pro';
+  if (PREMIUM_CODEX_PLAN_TYPES.has(normalized)) return 'codex_quota.plan_prolite';
+  if (normalized === 'plus') return 'codex_quota.plan_plus';
+  if (normalized === 'team') return 'codex_quota.plan_team';
+  if (normalized === 'free') return 'codex_quota.plan_free';
+  return null;
+}

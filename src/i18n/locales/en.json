@@ -445,7 +445,9 @@
     "weight_pill_title": "Routing weight {{value}}",
     "card_last_used": "Used {{time}}",
     "card_last_used_recent": "Used in the last 10 min",
-    "card_last_used_title": "Most recent request in the last 3h 20m window"
+    "card_last_used_title": "Most recent request in the last 3h 20m window",
+    "card_renews": "Renews {{time}}",
+    "card_renewal_passed": "Renewal due {{time}}"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",

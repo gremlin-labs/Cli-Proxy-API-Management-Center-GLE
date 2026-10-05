@@ -4,6 +4,7 @@ import zhCN from '@/i18n/locales/zh-CN.json';
 import zhTW from '@/i18n/locales/zh-TW.json';
 import ru from '@/i18n/locales/ru.json';
 import {
+  codexPlanLabelKey,
   ELITE_CODEX_PLAN_TYPE,
   PREMIUM_CODEX_PLAN_TYPES,
   resolvePlanTier,
@@ -57,5 +58,24 @@ describe('resolvePlanTier', () => {
     expect(resolvePlanTier(undefined)).toBe('plain');
     expect(resolvePlanTier('')).toBe('plain');
     expect(resolvePlanTier('   ')).toBe('plain');
+  });
+});
+
+describe('codexPlanLabelKey', () => {
+  test('maps known Codex plans to shared label keys', () => {
+    expect(codexPlanLabelKey('pro')).toBe('codex_quota.plan_pro');
+    expect(codexPlanLabelKey('prolite')).toBe('codex_quota.plan_prolite');
+    expect(codexPlanLabelKey('self_serve_business_prolite')).toBe(
+      'codex_quota.plan_business_premium'
+    );
+    expect(codexPlanLabelKey('PLUS')).toBe('codex_quota.plan_plus');
+    expect(codexPlanLabelKey('team')).toBe('codex_quota.plan_team');
+    expect(codexPlanLabelKey('free')).toBe('codex_quota.plan_free');
+  });
+
+  test('returns null for unknown or missing plans so callers show the raw value', () => {
+    expect(codexPlanLabelKey('enterprise')).toBeNull();
+    expect(codexPlanLabelKey('')).toBeNull();
+    expect(codexPlanLabelKey(null)).toBeNull();
   });
 });

@@ -443,7 +443,9 @@
     "weight_pill_title": "路由权重 {{value}}",
     "card_last_used": "{{time}}使用",
     "card_last_used_recent": "最近 10 分钟内使用",
-    "card_last_used_title": "最近 3 小时 20 分钟窗口内的最近一次请求"
+    "card_last_used_title": "最近 3 小时 20 分钟窗口内的最近一次请求",
+    "card_renews": "{{time}}续订",
+    "card_renewal_passed": "续订已于{{time}}到期"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",

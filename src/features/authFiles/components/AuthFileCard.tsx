@@ -16,7 +16,16 @@ import {
 import { ProviderStatusBar } from '@/components/providers/ProviderStatusBar';
 import type { AuthFileItem } from '@/types';
 import { lastActiveBlockAgeMs, statusBarDataFromRecentRequests } from '@/utils/recentRequests';
-import { formatRelativeInstant } from '@/utils/quota/relativeTime';
+import {
+  codexPlanLabelKey,
+  formatRelativeInstant,
+  normalizePlanType,
+  resolveCodexPlanType,
+  resolveCodexSubscriptionActiveUntil,
+  resolvePlanTier,
+  resolveResetMs,
+} from '@/utils/quota';
+import { useNow } from '@/hooks/useNow';
 import {
   formatModified,
   getAuthFileStatusMessage,
@@ -93,6 +102,19 @@ export function AuthFileCard(props: AuthFileCardProps) {
   const isManualRefreshing = manualRefreshing[getAuthFileRefreshKey(file)] === true;
   const typeLabel = getTypeLabel(t, providerKey);
   const typeColor = getTypeColor(providerKey, resolvedTheme);
+
+  // Codex plan and renewal come from the stored ID token, so they show before any quota refresh.
+  const codexPlanType = providerKey === 'codex' ? resolveCodexPlanType(file) : null;
+  const codexPlanKey = codexPlanLabelKey(codexPlanType);
+  const codexPlanLabel = codexPlanType
+    ? codexPlanKey
+      ? t(codexPlanKey)
+      : normalizePlanType(codexPlanType)
+    : null;
+  const codexPlanTier = resolvePlanTier(codexPlanType);
+  const renewsAtMs =
+    providerKey === 'codex' ? resolveResetMs([resolveCodexSubscriptionActiveUntil(file)]) : null;
+  const now = useNow(renewsAtMs !== null);
 
   const quotaType = resolveAuthFileQuotaType(file, quotaFilterType);
   const showQuotaLayout = Boolean(quotaType) && !isRuntimeOnly && !compact;
@@ -173,6 +195,16 @@ export function AuthFileCard(props: AuthFileCardProps) {
             {identity.primary}
           </span>
         </h3>
+        {codexPlanLabel && (
+          <span
+            className={`${styles.planBadge} ${
+              codexPlanTier === 'plain' ? '' : styles.planBadgePremium
+            }`}
+            title={t('codex_quota.plan_label')}
+          >
+            {codexPlanLabel}
+          </span>
+        )}
         {(priorityValue !== undefined || weightValue !== undefined) && (
           <span className={styles.routingPills}>
             {priorityValue !== undefined && (
@@ -259,6 +291,18 @@ export function AuthFileCard(props: AuthFileCardProps) {
           </>
         )}
         <span title={t('auth_files.file_modified')}>{formatModified(file)}</span>
+        {renewsAtMs !== null && (
+          <>
+            <span className={styles.metaDivider} aria-hidden="true">
+              ·
+            </span>
+            <span title={new Date(renewsAtMs).toLocaleString()}>
+              {t(renewsAtMs > now ? 'auth_files.card_renews' : 'auth_files.card_renewal_passed', {
+                time: formatRelativeInstant(renewsAtMs, now, i18n.language),
+              })}
+            </span>
+          </>
+        )}
       </div>
 
       {showQuotaLayout && quotaType && (

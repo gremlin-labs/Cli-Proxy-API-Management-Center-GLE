@@ -448,7 +448,9 @@
     "weight_pill_title": "Вес маршрутизации {{value}}",
     "card_last_used": "Использован {{time}}",
     "card_last_used_recent": "Использован за последние 10 мин",
-    "card_last_used_title": "Последний запрос в окне 3 ч 20 мин"
+    "card_last_used_title": "Последний запрос в окне 3 ч 20 мин",
+    "card_renews": "Продление {{time}}",
+    "card_renewal_passed": "Продление ожидалось {{time}}"
   },
   "antigravity_subscription": {
     "plan_unknown": "Неизвестно",

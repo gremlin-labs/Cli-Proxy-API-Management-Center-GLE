@@ -107,4 +107,12 @@ describe('auth file card presentation contract', () => {
       expect(messages.card_last_used).toContain('{{time}}');
     }
   });
+
+  test('shows the Codex plan and renewal from stored token data', () => {
+    expect(source).toContain("providerKey === 'codex' ? resolveCodexPlanType(file) : null");
+    expect(source).toContain('codexPlanLabelKey(codexPlanType)');
+    expect(source).toContain('resolveCodexSubscriptionActiveUntil(file)');
+    expect(source).toContain('useNow(renewsAtMs !== null)');
+    expect(styles).toContain('.planBadgePremium');
+  });
 });
