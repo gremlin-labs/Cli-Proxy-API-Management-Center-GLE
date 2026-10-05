@@ -617,6 +617,12 @@ export function MainLayout() {
           icon: sidebarIcons.aiProviders,
         },
         {
+          path: '/oauth',
+          labelKey: 'nav.oauth',
+          metaKey: 'nav_meta.oauth',
+          icon: sidebarIcons.oauth,
+        },
+        {
           path: '/auth-files',
           labelKey: 'nav.auth_files',
           metaKey: 'nav_meta.auth_files',
@@ -626,12 +632,6 @@ export function MainLayout() {
               ? t('sidebar.auth_files_count', { count: authFilesCount })
               : undefined,
           icon: sidebarIcons.authFiles,
-        },
-        {
-          path: '/oauth',
-          labelKey: 'nav.oauth',
-          metaKey: 'nav_meta.oauth',
-          icon: sidebarIcons.oauth,
         },
         ...(isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],

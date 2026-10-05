@@ -921,7 +921,10 @@
     "iflow_oauth_status_error": "Authentication failed:",
     "iflow_oauth_start_error": "Failed to start iFlow OAuth:",
     "iflow_oauth_polling_error": "Failed to check authentication status:",
-    "remote_access_disabled": "This login method is not available for remote access. Please access from localhost."
+    "remote_access_disabled": "This login method is not available for remote access. Please access from localhost.",
+    "login_international": "International",
+    "login_china": "China",
+    "region_kimi_title": "Kimi"
   },
   "stats": {
     "success": "Success",

@@ -41,12 +41,12 @@ describe('Kimi regional login', () => {
     }
   });
 
-  test('offers both cards with site-specific registration links', () => {
+  test('groups both regions into one login row with region-specific login buttons', () => {
     const source = readFileSync('src/pages/OAuthPage.tsx', 'utf8');
     expect(source).toContain("id: 'kimi-ai'");
     expect(source).toContain("id: 'kimi'");
     expect(source).toMatch(
-      /provider.id === 'kimi-ai'\s*\? KIMI_INTERNATIONAL_AFFILIATE_URL\s*: KIMI_CHINESE_AFFILIATE_URL/
+      /regions: \[\s*\{ id: 'kimi-ai', labelKey: 'auth_login\.login_international' \},\s*\{ id: 'kimi', labelKey: 'auth_login\.login_china' \},?\s*\]/
     );
     expect(new URL(KIMI_CHINESE_AFFILIATE_URL).hostname).toBe('platform.kimi.com');
     expect(new URL(KIMI_INTERNATIONAL_AFFILIATE_URL).hostname).toBe('platform.kimi.ai');
@@ -61,6 +61,9 @@ describe('Kimi regional login', () => {
         if (key.startsWith('kimi_ai_') || key === 'kimi_sign_up_button') continue;
         expect(messages[key.replace('kimi_', 'kimi_ai_')]).toBeTruthy();
       }
+      expect(messages.region_kimi_title).toBeTruthy();
+      expect(messages.login_international).toBeTruthy();
+      expect(messages.login_china).toBeTruthy();
       expect(messages.kimi_oauth_title).toContain('kimi.com');
       expect(messages.kimi_ai_oauth_title).toContain('kimi.ai');
     });

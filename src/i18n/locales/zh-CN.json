@@ -919,7 +919,10 @@
     "iflow_oauth_status_error": "认证失败:",
     "iflow_oauth_start_error": "启动 iFlow OAuth 失败:",
     "iflow_oauth_polling_error": "检查认证状态失败:",
-    "remote_access_disabled": "远程访问不支持此登录方式，请从本地 (localhost) 访问"
+    "remote_access_disabled": "远程访问不支持此登录方式，请从本地 (localhost) 访问",
+    "login_international": "国际站",
+    "login_china": "国内站",
+    "region_kimi_title": "Kimi"
   },
   "stats": {
     "success": "成功",

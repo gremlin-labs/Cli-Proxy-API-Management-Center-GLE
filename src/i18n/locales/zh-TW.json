@@ -945,7 +945,11 @@
     "iflow_cookie_result_expired": "到期時間",
     "iflow_cookie_result_path": "儲存路徑",
     "iflow_cookie_result_type": "類型",
-    "remote_access_disabled": "遠端存取不支援此登入方式，請從本地（localhost）存取"
+    "remote_access_disabled": "遠端存取不支援此登入方式，請從本地（localhost）存取",
+    "login_international": "國際站",
+    "login_china": "中國站",
+    "login_another_account": "登入另一個帳號",
+    "region_kimi_title": "Kimi"
   },
   "stats": {
     "success": "成功",

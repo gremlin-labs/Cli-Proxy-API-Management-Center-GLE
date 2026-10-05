@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, test } from 'bun:test';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -15,7 +16,7 @@ const i18n = createInstance();
 await i18n.init({ lng: 'en', resources: { en: { translation: en } } });
 
 describe('Devin OAuth login UI', () => {
-  test('renders a built-in login card with version and expiry guidance', () => {
+  test('renders a compact built-in login row and keeps guidance for the login session', () => {
     const markup = renderToStaticMarkup(
       createElement(
         I18nextProvider,
@@ -25,9 +26,16 @@ describe('Devin OAuth login UI', () => {
     );
     expect(markup).toContain('Devin OAuth');
     expect(markup).toContain('Start Devin Login');
-    expect(markup).toContain('v7.3.1');
-    expect(markup).toContain('five minutes');
     expect(markup).not.toContain('auth_login.devin_');
+    // Idle rows stay one line; the version and expiry guidance renders once a login starts.
+    expect(markup).not.toContain('v7.3.1');
+    const source = readFileSync('src/pages/OAuthPage.tsx', 'utf8');
+    const session = source.slice(
+      source.indexOf('const renderAuthSession'),
+      source.indexOf('const renderOAuthProviderCard')
+    );
+    expect(session).toContain("getProviderText(provider, 'oauth_hint')");
+    expect(i18n.t('auth_login.devin_oauth_hint')).toContain('five minutes');
   });
 
   test('supplies every Devin label and hint in all four languages', () => {
