@@ -70,8 +70,8 @@ const PROVIDER_LABELS: Array<{ key: string; label: string }> = [
   { key: 'openai', label: 'OpenAI' },
 ];
 
-const API_REPO_URL = 'https://github.com/josephcy95/CLIProxyAPI';
-const UI_REPO_URL = 'https://github.com/josephcy95/Cli-Proxy-API-Management-Center';
+const API_REPO_URL = 'https://github.com/gremlin-labs/CLIProxyAPI-GLE';
+const UI_REPO_URL = 'https://github.com/gremlin-labs/Cli-Proxy-API-Management-Center-GLE';
 const DOCS_URL = 'https://help.router-for.me/';
 
 const MODEL_CATEGORY_ICONS: Record<string, string | { light: string; dark: string }> = {

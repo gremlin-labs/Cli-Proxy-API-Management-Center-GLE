@@ -382,8 +382,8 @@
     display: flex;
     align-items: center;
     gap: 9px;
-    min-height: 36px;
-    padding: 2px 8px 12px;
+    min-height: 32px;
+    padding: 2px 8px 10px;
     margin-bottom: 2px;
     border-bottom: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -391,8 +391,8 @@
   }
 
   .sidebar-brand-logo {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
     border-radius: 6px;
     flex-shrink: 0;
@@ -402,7 +402,7 @@
     min-width: 0;
     overflow: hidden;
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 12.6px;
     font-weight: 650;
     letter-spacing: -0.02em;
     white-space: nowrap;
@@ -411,7 +411,7 @@
   .nav-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
   }
 
@@ -423,7 +423,7 @@
 
   .nav-group-label {
     padding: 0 8px 3px;
-    font-size: 10.5px;
+    font-size: 9.5px;
     font-weight: 650;
     letter-spacing: 0.07em;
     text-transform: uppercase;
@@ -473,26 +473,26 @@
   }
 
   .nav-item {
-    min-height: 32px;
-    padding: 5px 8px;
+    min-height: 28px;
+    padding: 4px 8px;
     border-radius: 7px;
     border: 0;
     color: var(--text-secondary);
-    font-size: 13px;
+    font-size: 11.7px;
     font-weight: 550;
     line-height: 1.3;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
     cursor: pointer;
     transition:
       background-color $transition-fast,
       color $transition-fast;
 
     .nav-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -500,15 +500,15 @@
       color: currentColor;
 
       svg {
-        width: 17px;
-        height: 17px;
+        width: 15px;
+        height: 15px;
         display: block;
       }
 
       img {
         display: block;
-        width: 17px;
-        height: 17px;
+        width: 15px;
+        height: 15px;
         border-radius: 4px;
         object-fit: cover;
       }
@@ -543,15 +543,15 @@
     }
 
     &.nav-sub-item {
-      min-height: 28px;
-      padding: 4px 8px;
+      min-height: 25px;
+      padding: 3px 8px;
       border-radius: 6px;
-      font-size: 12.5px;
+      font-size: 11.25px;
       font-weight: 550;
 
       .nav-icon {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
       }
     }
 

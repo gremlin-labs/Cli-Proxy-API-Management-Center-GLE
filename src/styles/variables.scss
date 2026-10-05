@@ -45,8 +45,9 @@ $z-modal: 2000;
 $z-notification: 3000;
 
 // Type
+// Instrument Sans is inlined into the build (see fonts.scss); system fonts are the fallback.
 $font-family:
-  'Inter',
+  'Instrument Sans',
   ui-sans-serif,
   system-ui,
   -apple-system,

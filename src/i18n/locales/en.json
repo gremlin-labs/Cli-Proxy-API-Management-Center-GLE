@@ -74,7 +74,7 @@
     "custom_connection_hint": "By default the current URL is used. Override it here if needed.",
     "remember_password_label": "Remember password",
     "management_key_label": "Management Key:",
-    "management_key_placeholder": "Enter the management key",
+    "management_key_placeholder": "Enter the management key (empty if not required)",
     "submit_button": "Login",
     "submitting": "Connecting...",
     "error_backend_detail": "Backend response",

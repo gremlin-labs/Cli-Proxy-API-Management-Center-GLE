@@ -2,7 +2,7 @@
 
 A clean, compact control panel for managing a CLI Proxy API server and the accounts behind it.
 
-This is a fork of the original Management Center, built to work with the forked [CLI Proxy API](https://github.com/josephcy95/CLIProxyAPI).
+This is the gremlinlabs edition of CPAMC++, a fork of the original Management Center, paired with [CLIProxyAPI-GLE](https://github.com/gremlin-labs/CLIProxyAPI-GLE).
 
 ## What this fork adds
 
@@ -55,10 +55,10 @@ bun run verify
 
 ## Use it with the API
 
-- **API server:** [josephcy95/CLIProxyAPI](https://github.com/josephcy95/CLIProxyAPI)
-- **Management Center:** [josephcy95/Cli-Proxy-API-Management-Center](https://github.com/josephcy95/Cli-Proxy-API-Management-Center)
+- **API server:** [gremlin-labs/CLIProxyAPI-GLE](https://github.com/gremlin-labs/CLIProxyAPI-GLE)
+- **Management Center:** [gremlin-labs/Cli-Proxy-API-Management-Center-GLE](https://github.com/gremlin-labs/Cli-Proxy-API-Management-Center-GLE)
 
-The two repositories are maintained together, so the API and UI changes are designed to work as a pair.
+The API serves this panel at `/management.html`, downloaded from this repository's latest release. Releases are published with `scripts/release.sh vX.Y.Z-gremlinlabs.N`.
 
 ## License and community
 
